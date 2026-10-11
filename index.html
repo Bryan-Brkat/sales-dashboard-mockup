@@ -104,6 +104,19 @@
   .matrix-table td.diag{background:var(--navy-900);color:var(--text-lo);}
   .matrix-table td.val{font-family:'IBM Plex Mono',monospace;color:var(--gold-soft);}
   .matrix-table td.from-label{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-lo);background:var(--navy-900);}
+  .matrix-table td.diag-eq{color:var(--gold-soft);font-family:'IBM Plex Mono',monospace;}
+  .matrix-table td.diag-na{
+    background-color:var(--navy-900);
+    background-image:repeating-linear-gradient(135deg, rgba(169,184,214,0.16) 0, rgba(169,184,214,0.16) 1px, transparent 1px, transparent 7px);
+  }
+  .matrix-table th.corner{position:relative;min-width:78px;padding:0;background:var(--navy-900);}
+  .matrix-table th.corner .corner-inner{
+    position:relative;width:100%;height:100%;min-height:44px;
+    background-image:linear-gradient(to top right, transparent calc(50% - 0.5px), var(--line) calc(50% - 0.5px), var(--line) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  }
+  .matrix-table th.corner .cx,.matrix-table th.corner .cy{position:absolute;font-size:8.5px;text-transform:uppercase;letter-spacing:0.3px;color:var(--text-lo);font-weight:500;transform:translate(-50%,-50%);}
+  .matrix-table th.corner .cy{top:32%;left:66%;}
+  .matrix-table th.corner .cx{top:68%;left:34%;}
 
   /* tables (sections 04 / 06) */
   .table-scroll{overflow-x:auto;padding-bottom:2px;}
@@ -112,7 +125,21 @@
   .table-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
   .bu-table{width:100%;border-collapse:collapse;min-width:760px;}
   .bu-table.wide{min-width:2080px;}
-  .bu-table.compact{min-width:0;width:100%;table-layout:fixed;}
+  .bu-table.compact{width:100%;table-layout:auto;}
+  /* Dense multi-column BU/staff tables (Sections 04 & 06/07): switch to fixed layout with
+     a colgroup so every #/%/hrs/days/Δ% column is exactly the same width, GDV columns get
+     more room for their longer currency values, and the table is free to grow past the
+     panel width — table-scroll then gives it a horizontal scrollbar instead of squeezing. */
+  .bu-table.fixed-cols{width:auto;min-width:100%;table-layout:fixed;}
+  .bu-table.fixed-cols td{white-space:nowrap;}
+  .bu-table col.cw-idx{width:32px;}
+  .bu-table col.cw-name{width:92px;}
+  .bu-table col.cw-std{width:58px;}
+  .bu-table col.cw-gdv{width:140px;}
+  /* Qualify-to-Unit Sold unit-values table: column widths are set in px via JS colgroup
+     so each month column lines up directly under its line-graph point above. */
+  #qualsold-units-table{table-layout:fixed;}
+  #qualsold-units-table td.left{white-space:normal;line-height:1.25;}
   .bu-table.compact th,.bu-table.compact td{padding:5px 4px;font-size:11px;}
   .bu-table.centered td:not(.left){text-align:center;}
   .bu-table th{font-size:9.5px;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-lo);font-weight:500;text-align:center;padding:0 8px 10px;border-bottom:1px solid var(--line);line-height:1.3;}
@@ -205,7 +232,7 @@
         <svg id="funnelchart" viewBox="0 0 460 380"></svg>
       </div>
       <div style="display:flex;flex-direction:column;height:100%;">
-        <div class="panel-title">Conversion between any two stages (including non-adjacent, e.g. Leads Qualified → Units Sold)</div>
+        <div class="panel-title">Stage X : Stage Y Conversion</div>
         <div id="matrixwrap" style="flex:1;"></div>
       </div>
     </div>
@@ -242,9 +269,9 @@
       <svg id="qualsoldchart" viewBox="0 0 980 280"></svg>
       <div class="chart-tooltip" id="qualsold-tooltip"></div>
     </div>
-    <div class="panel-title" style="margin-top:18px;">Underlying unit values</div>
-    <div class="table-scroll">
+    <div class="table-scroll" style="margin-top:18px;">
       <table class="bu-table compact centered" id="qualsold-units-table">
+        <colgroup id="qualsold-units-colgroup"></colgroup>
         <thead><tr><th class="left">Stage</th></tr></thead>
         <tbody id="qualsold-units-body"></tbody>
       </table>
@@ -269,7 +296,15 @@
         Funnel performance by BU (15 BUs)
       </div>
       <div class="table-scroll">
-        <table class="bu-table compact centered">
+        <table class="bu-table compact centered fixed-cols">
+          <colgroup>
+            <col class="cw-idx"><col class="cw-name">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+          </colgroup>
           <thead>
             <tr>
               <th rowspan="2">#</th><th rowspan="2" class="left">BU</th>
@@ -308,7 +343,14 @@
         Leads by BU (15 BUs) — counts &amp; comparison only
       </div>
       <div class="table-scroll">
-        <table class="bu-table compact centered">
+        <table class="bu-table compact centered fixed-cols">
+          <colgroup>
+            <col class="cw-idx"><col class="cw-name">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+          </colgroup>
           <thead>
             <tr>
               <th rowspan="2">#</th><th rowspan="2" class="left">BU</th>
@@ -346,7 +388,13 @@
         Leads by ad campaign (Ads 1–10) — counts &amp; comparison only
       </div>
       <div class="table-scroll">
-        <table class="bu-table compact centered">
+        <table class="bu-table compact centered fixed-cols">
+          <colgroup>
+            <col class="cw-idx"><col class="cw-name">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+          </colgroup>
           <thead>
             <tr>
               <th rowspan="2">#</th><th rowspan="2" class="left">Ads</th>
@@ -372,13 +420,15 @@
   </div>
 
   <!-- ============ SECTION 05: Monthly Stage Conversion by BU ============ -->
-  <div class="section-label">
+  <!-- Innovation + Leadership only — BU Admin has no "BU Name" concept (single BU), and
+       this table always shows all 15 BUs regardless of that filter, so it doesn't apply. -->
+  <div class="section-label" data-view="innovation leadership">
     <span class="num">05</span>
     <h2>Monthly Stage Conversion by BU</h2>
     <div class="rule"></div>
     <span class="trend-badge">Fixed, trailing 12 months</span>
   </div>
-  <div class="panel" style="margin-bottom:14px;padding:16px 20px;">
+  <div class="panel" style="margin-bottom:14px;padding:16px 20px;" data-view="innovation leadership">
     <div class="combo-controls">
       <div class="filter" style="min-width:200px;flex:none;">
         <label>From Stage</label>
@@ -400,8 +450,8 @@
       </div>
     </div>
   </div>
-  <div class="panel" style="margin-bottom:22px;">
-    <div class="panel-title" id="conv-table-title">Leads Generated → Leads Qualified, by BU (each cell: from → to, conversion %)</div>
+  <div class="panel" style="margin-bottom:22px;" data-view="innovation leadership">
+    <div class="panel-title" id="conv-table-title">Leads Generated → Leads Qualified</div>
     <div class="table-scroll">
       <table class="bu-table compact centered" id="conv-table">
         <thead><tr id="conv-table-head"><th class="left">BU</th></tr></thead>
@@ -444,12 +494,23 @@
         Time metrics by BU (15 BUs)
       </div>
       <div class="table-scroll">
-        <table class="bu-table compact centered">
+        <table class="bu-table compact centered fixed-cols">
+          <colgroup>
+            <col class="cw-idx"><col class="cw-name">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-gdv">
+            <col class="cw-std"><col class="cw-std"><col class="cw-gdv">
+          </colgroup>
           <thead>
             <tr>
               <th rowspan="3">#</th><th rowspan="3" class="left">BU</th>
               <th colspan="3" class="group-header grp-origa">Origa</th>
-              <th colspan="16" class="group-header grp-staff grp-divider">Sales Staff</th>
+              <th colspan="18" class="group-header grp-staff grp-divider">Sales Staff</th>
             </tr>
             <tr>
               <th colspan="2" class="group-header grp-origa">Qual. Time</th><th class="group-header grp-origa">Leads Qualified</th>
@@ -485,24 +546,40 @@
         Time metrics by BU (15 BUs)
       </div>
       <div class="table-scroll">
-        <table class="bu-table compact centered">
+        <table class="bu-table compact centered fixed-cols">
+          <colgroup>
+            <col class="cw-idx"><col class="cw-name">
+            <col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-gdv">
+            <col class="cw-std"><col class="cw-std"><col class="cw-gdv">
+          </colgroup>
           <thead>
             <tr>
               <th rowspan="3">#</th><th rowspan="3" class="left">BU</th>
               <th class="group-header grp-origa">Origa</th>
-              <th colspan="8" class="group-header grp-staff grp-divider">Sales Staff</th>
+              <th colspan="16" class="group-header grp-staff grp-divider">Sales Staff</th>
             </tr>
             <tr>
               <th class="group-header grp-origa">Leads Qualified</th>
               <th colspan="3" class="group-header grp-staff grp-divider">Qualified Contacted</th>
               <th colspan="3" class="group-header grp-staff grp-subdivider">Qualified Uncontacted</th>
               <th colspan="2" class="group-header grp-staff grp-subdivider">Time to First Contact</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Gallery Visited</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Units Booked</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Units Sold</th>
             </tr>
             <tr>
               <th class="grp-origa">#</th>
               <th class="grp-staff grp-divider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
               <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
               <th class="grp-staff grp-subdivider">hrs</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th><th class="grp-staff">GDV</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th><th class="grp-staff">GDV</th>
             </tr>
           </thead>
           <tbody id="leadership-table-body"></tbody>
@@ -519,7 +596,18 @@
         Time metrics by sales staff (Staff 1–10)
       </div>
       <div class="table-scroll">
-        <table class="bu-table compact centered">
+        <table class="bu-table compact centered fixed-cols">
+          <colgroup>
+            <col class="cw-idx"><col class="cw-name">
+            <col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std">
+            <col class="cw-std"><col class="cw-std"><col class="cw-gdv">
+            <col class="cw-std"><col class="cw-std"><col class="cw-gdv">
+          </colgroup>
           <thead>
             <tr>
               <th rowspan="3">#</th><th rowspan="3" class="left">Sales Staff</th>
@@ -692,6 +780,26 @@
     return d.toISOString().slice(0,10);
   }
 
+  // Month-level "market conditions" wobble — shared across every BU (unlike the per-BU
+  // noise below, which is independent per BU and averages out once summed across all 15).
+  // Applying the same factor to every BU for a given month means the aggregated trend
+  // lines (Sections 02/03) show genuine month-to-month ups and downs instead of settling
+  // into the smooth underlying ramp.
+  function buildMonthWobble(n, lo, hi){
+    var arr = [1], step = (hi-lo)/2;
+    for (var i=1;i<n;i++){
+      var next = arr[i-1] + rand(-step,step);
+      arr.push(Math.min(hi, Math.max(lo, next)));
+    }
+    return arr;
+  }
+  var MONTH_WOBBLE = {
+    qualMult:    buildMonthWobble(MONTHS_TREND.length, 0.90, 1.10),
+    galleryMult: buildMonthWobble(MONTHS_TREND.length, 0.88, 1.12),
+    bookedMult:  buildMonthWobble(MONTHS_TREND.length, 0.86, 1.14),
+    soldMult:    buildMonthWobble(MONTHS_TREND.length, 0.84, 1.16)
+  };
+
   BUS.forEach(function(bu){
     bu.monthly = MONTHS.map(function(_, m){
       var trend = 0.90 + (m/(MONTHS.length-1))*0.22;
@@ -700,10 +808,19 @@
     });
     // 12-month trend series (Sections 02/03/05/06) — decoupled from the real-date
     // machinery above, which only spans Jan–Aug 2026.
+    // Each BU also gets a small persistent "character" per stage (some BUs consistently
+    // run a bit hotter/colder than the pack) plus a low-probability one-off shock per
+    // month, layered on top of wider per-BU noise — this is what actually produces
+    // visible over/under-performing outliers in the BU-comparison views, rather than
+    // all 15 BUs hugging the same shared market trend within a few percent of each other.
+    var buBias = { qualMult: rand(0.90,1.10), galleryMult: rand(0.88,1.12), bookedMult: rand(0.85,1.15), soldMult: rand(0.82,1.18) };
     bu.trendMonthly = MONTHS_TREND.map(function(_, m){
       var trend = 0.90 + (m/(MONTHS_TREND.length-1))*0.22;
-      function noisy(){ return Math.min(1.08, Math.max(0.82, trend*rand(0.94,1.06))); }
-      return { leadsFactor: rand(0.85,1.18), qualMult: noisy(), galleryMult: noisy(), bookedMult: noisy(), soldMult: noisy() };
+      function noisy(key){
+        var shock = (rng() < 0.08) ? rand(0.6,1.45) : 1; // ~1 in 12 months gets a standout spike/dip
+        return Math.min(1.4, Math.max(0.55, trend*MONTH_WOBBLE[key][m]*buBias[key]*rand(0.90,1.10)*shock));
+      }
+      return { leadsFactor: rand(0.85,1.18), qualMult: noisy('qualMult'), galleryMult: noisy('galleryMult'), bookedMult: noisy('bookedMult'), soldMult: noisy('soldMult') };
     });
     bu.opsMonthly = MONTHS_TREND.map(function(_, m){
       var improve = 1.15 - (m/(MONTHS_TREND.length-1))*0.3;
@@ -1147,6 +1264,17 @@
   }
 
   // ================= Section 05: Monthly Stage Conversion by BU =================
+  // Keeps the "To Stage" dropdown restricted to stages strictly after the selected
+  // "From Stage" — e.g. From=Gallery Visited only offers Units Booked / Units Sold.
+  function syncConvToOptions(){
+    var fromEl = document.getElementById('f-conv-from'), toEl = document.getElementById('f-conv-to');
+    if (!fromEl || !toEl) return;
+    var fromIdx = STAGE_ORDER.indexOf(fromEl.value);
+    var prevTo = toEl.value;
+    var options = STAGE_ORDER.slice(fromIdx+1);
+    toEl.innerHTML = options.map(function(k){ return '<option value="'+k+'">'+STAGE_INFO[k].short+'</option>'; }).join('');
+    toEl.value = options.indexOf(prevTo) !== -1 ? prevTo : options[0];
+  }
   function renderConvTable(){
     var fromEl = document.getElementById('f-conv-from'), toEl = document.getElementById('f-conv-to');
     if (!fromEl || !toEl) return;
@@ -1154,17 +1282,33 @@
     var leadType = getFilterValue('leadtype', 'live');
     var projChoice = MULTISELECT_STATE.project;
     document.getElementById('conv-table-title').textContent =
-      STAGE_INFO[fromKey].short+' → '+STAGE_INFO[toKey].short+', by BU (each cell: from → to, conversion %)';
+      STAGE_INFO[fromKey].short+' → '+STAGE_INFO[toKey].short;
     var head = document.getElementById('conv-table-head');
     head.innerHTML = '<th class="left">BU</th>' + MONTHS_TREND.map(function(m){ return '<th>'+m+'</th>'; }).join('');
-    var tbody = document.getElementById('conv-table-body');
-    tbody.innerHTML = BUS.map(function(bu){
+
+    // Precompute each BU's conversion rate per month first, so cells can be colour-coded
+    // green→red relative to how the other 14 BUs performed in that same month.
+    var grid = BUS.map(function(bu){
       var pf = projectFactor(bu, projChoice);
-      var cells = MONTHS_TREND.map(function(_, m){
+      return MONTHS_TREND.map(function(_, m){
         var c = computeBUTrendMonth(bu, leadType, m, pf);
         var fromVal = c[fromKey], toVal = c[toKey];
-        var rate = fromVal ? toVal/fromVal : 0;
-        return '<td>'+fmtCompactNum(fromVal)+'→'+fmtCompactNum(toVal)+'<br><span style="color:var(--gold-soft);">'+pct(rate)+'</span></td>';
+        return { fromVal: fromVal, toVal: toVal, rate: fromVal ? toVal/fromVal : 0 };
+      });
+    });
+    var monthMin = [], monthMax = [];
+    MONTHS_TREND.forEach(function(_, m){
+      var vals = grid.map(function(row){ return row[m].rate; });
+      monthMin[m] = Math.min.apply(null, vals);
+      monthMax[m] = Math.max.apply(null, vals);
+    });
+
+    var tbody = document.getElementById('conv-table-body');
+    tbody.innerHTML = BUS.map(function(bu, bi){
+      var cells = MONTHS_TREND.map(function(_, m){
+        var cell = grid[bi][m];
+        var bg = colorScale(cell.rate, monthMin[m], monthMax[m]);
+        return '<td style="background:'+bg+';">'+fmtCompactNum(cell.fromVal)+'→'+fmtCompactNum(cell.toVal)+'<br><span style="color:var(--gold-soft);">'+pct(cell.rate)+'</span></td>';
       }).join('');
       return '<tr><td class="left name">'+bu.id+'</td>'+cells+'</tr>';
     }).join('');
@@ -1226,13 +1370,14 @@
 
   function drawConversionMatrix(current){
     var wrap = document.getElementById('matrixwrap');
-    var html = '<table class="matrix-table"><thead><tr><th></th>';
+    var html = '<table class="matrix-table"><thead><tr><th class="corner"><div class="corner-inner"><span class="cy">Stage Y</span><span class="cx">Stage X</span></div></th>';
     STAGE_ORDER.forEach(function(k){ html += '<th>'+STAGE_INFO[k].short+'</th>'; });
     html += '</tr></thead><tbody>';
     STAGE_ORDER.forEach(function(rk, ri){
       html += '<tr><td class="from-label">'+STAGE_INFO[rk].short+'</td>';
       STAGE_ORDER.forEach(function(ck, ci){
-        if (ci <= ri){ html += '<td class="diag">—</td>'; }
+        if (ci === ri){ html += '<td class="diag-eq">100%</td>'; }
+        else if (ci < ri){ html += '<td class="diag-na"></td>'; }
         else {
           var rate = current[rk] ? current[ck]/current[rk] : 0;
           html += '<td class="val">'+pct(rate)+'</td>';
@@ -1352,7 +1497,8 @@
       c.setAttribute('stroke','#101f30'); c.setAttribute('stroke-width','1.5'); svg.appendChild(c);
       var lbl=document.createElementNS(svgns,'text');
       lbl.setAttribute('x',xGroup(i)); lbl.setAttribute('y',yPct(v)-9); lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','trend-tip');
-      lbl.style.fill='var(--text-lo)'; lbl.textContent = pct(v); svg.appendChild(lbl);
+      lbl.setAttribute('font-weight','700'); lbl.setAttribute('font-size','10.5');
+      lbl.style.fill='var(--gold-soft)'; lbl.textContent = pct(v); svg.appendChild(lbl);
     });
     var legend=document.getElementById('combo-legend');
     legend.innerHTML =
@@ -1372,7 +1518,7 @@
   function drawQualifyToSoldChart(series){
     var LAYERS = ['qualified','gallery','booked','sold'];
     var svg = document.getElementById('qualsoldchart');
-    var W=980,H=280,padL=56,padR=24,padT=18,padB=34;
+    var W=980,H=280,padL=92,padR=24,padT=18,padB=34;
     var plotW=W-padL-padR, plotH=H-padT-padB, n=MONTHS_TREND.length, groupW=plotW/n, bottom=padT+plotH;
 
     var RATE_PAIRS = [
@@ -1399,12 +1545,9 @@
       lblL.setAttribute('x',padL-8); lblL.setAttribute('y',yy+3); lblL.setAttribute('text-anchor','end'); lblL.setAttribute('class','trend-tip');
       lblL.textContent = Math.round(axisMax*v*100)+'%'; svg.appendChild(lblL);
     });
-    MONTHS_TREND.forEach(function(m,i){
-      var lbl=document.createElementNS(svgns,'text');
-      lbl.setAttribute('x',xGroup(i)); lbl.setAttribute('y',H-8); lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','trend-tip');
-      lbl.setAttribute('font-size','8.5');
-      lbl.textContent=m; svg.appendChild(lbl);
-    });
+    // Month labels are intentionally not drawn on this chart's x-axis — the unit-values
+    // table immediately below already shows one row of month names, so repeating them
+    // here would duplicate the same labels twice in a row.
     RATE_PAIRS.forEach(function(rp, ri){
       var color = STAGE_INFO[rp.toKey].color;
       var pts = series.map(function(row,i){ var rate = row.qualified ? row[rp.toKey]/row.qualified : 0; return xGroup(i)+','+yPct(rate); }).join(' ');
@@ -1433,15 +1576,37 @@
       return html;
     });
 
-    // unit values (previously shown as bars) now live in a table below the chart
+    // Unit values live in a table below the chart. Its columns are sized (via colgroup,
+    // as % of the table's own width) to mirror this chart's padL/groupW exactly, so each
+    // month column sits perpendicularly under that month's point on the line graph above.
+    var tableEl = document.getElementById('qualsold-units-table');
+    if (tableEl){
+      var tableSpan = W - padR; // matches chart's plotted region + left gutter, excluding padR
+      tableEl.style.width = (tableSpan/W*100)+'%';
+      var colgroup = document.getElementById('qualsold-units-colgroup');
+      if (colgroup){
+        colgroup.innerHTML = '<col style="width:'+(padL/tableSpan*100)+'%;">' +
+          MONTHS_TREND.map(function(){ return '<col style="width:'+(groupW/tableSpan*100)+'%;">'; }).join('');
+      }
+    }
     var theadRow = document.querySelector('#qualsold-units-table thead tr');
     if (theadRow && theadRow.children.length === 1){
       theadRow.innerHTML = '<th class="left">Stage</th>' + MONTHS_TREND.map(function(m){ return '<th>'+m+'</th>'; }).join('');
     }
     var tbody = document.getElementById('qualsold-units-body');
     if (tbody){
+      // Colour-coded green→red like the other data tables, but row-wise (each stage's own
+      // min/max across its 12 months) rather than column-wise — these rows are different
+      // funnel stages with very different natural scales (Qualified >> Sold), so comparing
+      // across rows within one month would just always paint "Qualified" green and "Sold"
+      // red regardless of actual performance.
       tbody.innerHTML = LAYERS.map(function(key){
-        var cells = series.map(function(row){ return '<td>'+fmt(row[key])+'</td>'; }).join('');
+        var vals = series.map(function(row){ return row[key]; });
+        var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals) || 1;
+        var cells = series.map(function(row){
+          var bg = colorScale(row[key], min, max);
+          return '<td style="background:'+bg+';">'+fmt(row[key])+'</td>';
+        }).join('');
         return '<tr><td class="left name" style="color:'+STAGE_INFO[key].color+';">'+STAGE_INFO[key].short+'</td>'+cells+'</tr>';
       }).join('');
     }
@@ -1613,7 +1778,7 @@
     var uncontPctStat = { min: Math.min.apply(null, uncontPctVals), max: Math.max.apply(null, uncontPctVals) || 1 };
 
     var fStats = null;
-    if (profile === 'buadmin' || profile === 'full'){
+    if (profile === 'buadmin' || profile === 'full' || profile === 'leadership'){
       function statOf(vals){ return { min: Math.min.apply(null, vals), max: Math.max.apply(null, vals) || 1 }; }
       fStats = {
         gallery: statOf(rows.map(function(r){ return r.gallery; })),
@@ -1665,7 +1830,7 @@
         (profile !== 'leadership' ? metricCell(row,'agingDays','grp-staff-cell grp-subdivider') + momCellInverseGrp(row.mom.agingDays,'grp-staff-cell',neutral) : '');
 
       var funnelCells = '';
-      if (profile === 'buadmin' || profile === 'full'){
+      if (profile === 'buadmin' || profile === 'full' || profile === 'leadership'){
         funnelCells =
           scaledCell(row.gallery, fStats.gallery, 'grp-staff-cell grp-subdivider', fmt(row.gallery), false) +
           scaledCell(row.qualified?row.gallery/row.qualified:0, fStats.galleryPct, 'grp-staff-cell', pct(row.qualified?row.gallery/row.qualified:0), false) +
@@ -1943,11 +2108,13 @@
         opsSeries = computeOpsSeries(buList);
         if (opsDelta === 'average') opsBenchmark = computeBenchmarkSeries(DELTA_STAT_FN.average);
       }
-      // when a genuine subset of BUs is selected (not "All BUs"), also draw each BU's own
-      // line alongside the aggregate, so 3 selected BUs → 1 aggregate + 3 individual lines.
+      // When a genuine subset is selected (not "All"), also draw each item's own line
+      // alongside the aggregate — e.g. 3 selected BUs/staff → 1 aggregate + 3 individual lines.
       var opsIndividual = null;
       if (currentView === 'innovation' && buList.length > 1 && buList.length < BUS.length && buList.length <= 8){
         opsIndividual = buList.map(function(bu){ return { id: bu.id, series: computeOpsSeries([bu]) }; });
+      } else if (currentView === 'buadmin' && staffList.length > 1 && staffList.length < STAFF.length && staffList.length <= 8){
+        opsIndividual = staffList.map(function(s){ return { id: s.id, series: averageOpsMonthly([s]) }; });
       }
       drawOpsChart(opsSeries, opsMetric, opsBenchmark, opsDelta, opsIndividual);
     }
@@ -2049,9 +2216,13 @@
 
     // ---- Leaderboards (Innovation + Leadership only) ----
     if (currentView === 'innovation' || currentView === 'leadership'){
+      // Leaderboards have their own Start/End Date filter (independent of Section 01's
+      // Timeframe control) — read it directly rather than reusing Section 01's dates.
+      var lbStart = getFilterValue('start', startDate);
+      var lbEnd = getFilterValue('end', endDate);
       var perBU = BUS.map(function(bu){
         var pf = projectFactor(bu, projChoice);
-        var c = applyProjectRateVariance(bu, projChoice, computeBURangeCounts(bu, leadType, startDate, endDate, pf));
+        var c = applyProjectRateVariance(bu, projChoice, computeBURangeCounts(bu, leadType, lbStart, lbEnd, pf));
         return { id: bu.id, avgPrice: bu.avgPrice, leads:c.leads, qualified:c.qualified, sold:c.sold, qualRate: c.leads? c.qualified/c.leads:0 };
       });
       var label = boardMode === 'top' ? 'Top 5' : 'Bottom 5';
@@ -2114,9 +2285,10 @@
     }
   });
 
-  document.getElementById('f-conv-from').addEventListener('change', render);
+  document.getElementById('f-conv-from').addEventListener('change', function(){ syncConvToOptions(); render(); });
   document.getElementById('f-conv-to').addEventListener('change', render);
 
+  syncConvToOptions();
   setView('innovation');
 </script>
 </body>
