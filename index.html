@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Innovation Team Dashboard — Mockup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0b1520; --navy-900:#101f30; --navy-800:#16293d; --navy-700:#1f3650;
+    --line:#2a415d; --gold:#c8a24d; --gold-soft:#e4cd8f;
+    --text-hi:#f3f1ea; --text-lo:#a9b8c9; --up:#6fbf8b; --down:#d95353;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--navy-950);
+    background-image:radial-gradient(circle at 100% 0%, rgba(200,162,77,0.10), transparent 45%),
+      radial-gradient(circle at 0% 100%, rgba(31,54,80,0.6), transparent 55%);
+    color:var(--text-hi); font-family:'Inter',sans-serif; padding:28px 32px 60px;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:22px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{width:34px;height:34px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;color:var(--gold);font-size:16px;transform:rotate(45deg);}
+  .brand-mark span{transform:rotate(-45deg);}
+  .titles h1{font-family:'Fraunces',serif;font-weight:600;font-size:26px;letter-spacing:0.5px;margin:0;color:var(--text-hi);}
+  .titles p{margin:2px 0 0;font-size:12px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;}
+  .asof{text-align:right;font-size:11px;color:var(--text-lo);letter-spacing:0.5px;}
+  .asof b{color:var(--gold-soft);font-weight:600;}
+
+  .view-switch{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+  .view-switch button{background:var(--navy-800);border:1px solid var(--line);color:var(--text-lo);font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.4px;padding:5px 11px;border-radius:20px;cursor:pointer;transition:all .15s ease;}
+  .view-switch button.active{background:var(--gold);border-color:var(--gold);color:var(--navy-950);font-weight:600;}
+  .view-switch button:hover:not(.active){background:var(--navy-700);color:var(--text-hi);}
+
+  .filter-scope{font-size:11px;color:var(--text-lo);margin-bottom:18px;padding:10px 14px;background:var(--navy-800);border:1px solid var(--line);border-radius:2px;line-height:1.6;}
+  .filter-scope b{color:var(--gold-soft);font-weight:600;}
+
+  .filters{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;align-items:flex-end;}
+  .filter{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1;}
+  .filter label{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-lo);}
+  .filter select, .filter input[type="date"], .filter input[type="month"]{
+    appearance:none;background:var(--navy-800);border:1px solid var(--line);color:var(--text-hi);
+    padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;border-radius:2px;cursor:pointer;
+    color-scheme:dark;
+  }
+  .filter select{
+    padding-right:34px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23c8a24d'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  .filter select:focus, .filter input:focus{outline:1px solid var(--gold);}
+  .badge-static{background:var(--navy-800);border:1px solid var(--line);color:var(--gold-soft);padding:10px 12px;font-size:13px;border-radius:2px;font-family:'IBM Plex Mono',monospace;}
+
+  .ms-wrap{position:relative;}
+  .ms-toggle{width:100%;text-align:left;background:var(--navy-800);border:1px solid var(--line);color:var(--text-hi);padding:10px 30px 10px 12px;font-size:13px;font-family:'Inter',sans-serif;border-radius:2px;cursor:pointer;position:relative;}
+  .ms-toggle::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:10px;}
+  .ms-panel{display:none;position:absolute;top:100%;left:0;margin-top:4px;background:var(--navy-800);border:1px solid var(--line);border-radius:2px;padding:8px;max-height:220px;overflow-y:auto;z-index:20;min-width:170px;box-shadow:0 8px 20px rgba(0,0,0,0.4);}
+  .ms-panel.open{display:block;}
+  .ms-panel label{display:flex;align-items:center;gap:8px;padding:5px 4px;font-size:12px;color:var(--text-hi);cursor:pointer;border-radius:2px;}
+  .ms-panel label:hover{background:var(--navy-700);}
+  .ms-panel label.all-row{border-bottom:1px solid var(--line);margin-bottom:4px;padding-bottom:8px;font-weight:600;color:var(--gold-soft);}
+  .ms-panel input[type="checkbox"]{accent-color:var(--gold);width:13px;height:13px;}
+
+  .section-label{display:flex;align-items:center;gap:10px;margin:34px 0 12px;flex-wrap:wrap;}
+  .section-label .num{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:11px;border:1px solid var(--line);padding:3px 7px;border-radius:2px;}
+  .section-label h2{font-family:'Fraunces',serif;font-weight:600;font-size:15px;margin:0;letter-spacing:0.4px;color:var(--text-hi);}
+  .section-label .rule{flex:1;height:1px;background:var(--line);min-width:20px;}
+  .trend-badge{font-size:10px;color:var(--text-lo);letter-spacing:0.4px;border:1px solid var(--line);padding:3px 8px;border-radius:20px;white-space:nowrap;}
+
+  .panel{background:var(--navy-800);border:1px solid var(--line);padding:20px;}
+  .panel-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-lo);margin-bottom:18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .trend-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text-lo);}
+  .trend-legend .item{display:flex;align-items:center;gap:6px;}
+  .trend-legend .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .trend-legend .sq{width:10px;height:10px;display:inline-block;}
+  .footnote{margin-top:14px;font-size:10.5px;color:var(--text-lo);line-height:1.5;}
+
+  #funnelchart,#matrixwrap,#combochart,#qualsoldchart,#opschart{width:100%;height:auto;display:block;}
+  .chart-wrap{position:relative;}
+  .chart-tooltip{
+    position:absolute; display:none; pointer-events:none; z-index:50;
+    background:var(--navy-950); border:1px solid var(--gold); border-radius:4px;
+    padding:9px 11px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-hi);
+    box-shadow:0 4px 14px rgba(0,0,0,0.45); white-space:nowrap; line-height:1.6;
+  }
+  .chart-tooltip .tt-title{font-family:'Inter',sans-serif;font-weight:600;color:var(--gold-soft);margin-bottom:4px;font-size:11px;}
+  .chart-tooltip .tt-row{display:flex;align-items:center;gap:6px;}
+  .chart-tooltip .tt-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .trend-tip{font-size:10px;fill:var(--text-lo);font-family:'IBM Plex Mono',monospace;}
+
+  /* funnel increments */
+  .funnel-delta{font-family:'IBM Plex Mono',monospace;}
+  .funnel-delta.up{fill:var(--up);}
+  .funnel-delta.down{fill:var(--down);}
+  .funnel-delta.neutral{fill:var(--text-lo);}
+
+  /* conversion matrix */
+  .matrix-table{width:100%;height:100%;border-collapse:collapse;font-size:12px;}
+  .matrix-table th,.matrix-table td{padding:13px 10px;text-align:center;border:1px solid var(--line);}
+  .matrix-table th{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-lo);background:var(--navy-900);}
+  .matrix-table td.diag{background:var(--navy-900);color:var(--text-lo);}
+  .matrix-table td.val{font-family:'IBM Plex Mono',monospace;color:var(--gold-soft);}
+  .matrix-table td.from-label{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-lo);background:var(--navy-900);}
+
+  /* tables (sections 04 / 06) */
+  .table-scroll{overflow-x:auto;padding-bottom:2px;}
+  .table-scroll::-webkit-scrollbar{height:7px;}
+  .table-scroll::-webkit-scrollbar-track{background:var(--navy-900);}
+  .table-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+  .bu-table{width:100%;border-collapse:collapse;min-width:760px;}
+  .bu-table.wide{min-width:2080px;}
+  .bu-table.compact{min-width:0;width:100%;table-layout:fixed;}
+  .bu-table.compact th,.bu-table.compact td{padding:5px 4px;font-size:11px;}
+  .bu-table.centered td:not(.left){text-align:center;}
+  .bu-table th{font-size:9.5px;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-lo);font-weight:500;text-align:center;padding:0 8px 10px;border-bottom:1px solid var(--line);line-height:1.3;}
+  .bu-table th.group-header{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;font-weight:700;padding-bottom:12px;padding-top:6px;margin-bottom:2px;}
+  .bu-table thead tr:first-child th{padding-bottom:12px;}
+  .bu-table thead tr:nth-child(2) th{padding-top:6px;padding-bottom:8px;font-size:9px;color:var(--text-lo);font-weight:600;}
+  .bu-table th.group-header.grp-origa{background:rgba(200,162,77,0.22);color:var(--gold-soft);border-bottom:2px solid var(--gold);}
+  .bu-table th.group-header.grp-staff{background:rgba(127,168,217,0.20);color:#cfe0f5;border-bottom:2px solid #7fa8d9;}
+  .bu-table th.group-header.grp-leads{background:rgba(127,168,217,0.16);color:#bcd3ec;border-bottom:2px solid #7fa8d9;}
+  .bu-table th.group-header.grp-qualified{background:rgba(200,162,77,0.16);color:var(--gold-soft);border-bottom:2px solid var(--gold);}
+  .bu-table th.group-header.grp-gallery{background:rgba(111,191,139,0.16);color:#a9dcb8;border-bottom:2px solid var(--up);}
+  .bu-table th.group-header.grp-booked{background:rgba(217,129,152,0.16);color:#f0b7c6;border-bottom:2px solid #d98198;}
+  .bu-table th.group-header.grp-sold{background:rgba(165,143,217,0.16);color:#d3c4f0;border-bottom:2px solid #a58fd9;}
+  .bu-table th.group-header.grp-rate{background:rgba(169,184,214,0.12);color:var(--text-hi);border-bottom:2px solid var(--line);}
+  .bu-table .grp-divider{border-left:1px solid #4a6488;}
+  .bu-table .grp-subdivider{border-left:1px solid #4a6488;}
+  .bu-table td.grp-origa-cell{background:rgba(200,162,77,0.04);}
+  .bu-table td.grp-staff-cell{background:rgba(127,168,217,0.03);}
+  .bu-table th.left,.bu-table td.left{text-align:left;}
+  .bu-table td{padding:5px 8px;border-bottom:1px solid #1c3247;font-size:12px;vertical-align:middle;text-align:center;}
+  .bu-table td.left{text-align:left;}
+  .bu-table td.name{font-family:'IBM Plex Mono',monospace;color:var(--gold-soft);white-space:nowrap;}
+  .bu-table td.idx{font-family:'IBM Plex Mono',monospace;color:var(--text-lo);text-align:center;width:24px;}
+  .bu-table tr.highlight td{background:rgba(200,162,77,0.10);}
+  .bu-table tr:hover td{background:rgba(255,255,255,0.02);}
+  .rate-cell{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;white-space:nowrap;}
+  .mom-cell{text-align:center;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:12px;}
+  .arrow.up{color:var(--up);font-weight:600;}
+  .arrow.neutral{color:var(--text-lo);font-weight:600;}
+  .arrow.down{color:var(--down);font-weight:600;}
+  .arrow.good{color:var(--up);font-weight:600;}
+  .arrow.bad{color:var(--down);font-weight:600;}
+
+  .combo-controls{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .combo-controls .filter{min-width:200px;flex:none;}
+
+  .board{margin-bottom:22px;}
+  .board:last-child{margin-bottom:0;}
+  .board-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .board-header h3{font-family:'Fraunces',serif;font-size:13px;font-weight:600;margin:0;color:var(--gold-soft);}
+  .toggle-btn{background:var(--navy-700);border:1px solid var(--gold);color:var(--gold-soft);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.5px;padding:5px 10px;border-radius:20px;cursor:pointer;transition:background .15s ease;}
+  .toggle-btn:hover{background:var(--navy-800);}
+  .board table{width:100%;border-collapse:collapse;}
+  .board td,.board th{padding:7px 0;font-size:12px;border-bottom:1px dashed var(--line);}
+  .board th{font-size:9.5px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-lo);text-align:right;font-weight:500;}
+  .board th.left,.board td.name{text-align:left;}
+  .board tr:last-child td{border-bottom:none;}
+  .board td.rank{font-family:'IBM Plex Mono',monospace;color:var(--gold);width:22px;font-size:11px;}
+  .board td.name{color:var(--text-hi);font-family:'IBM Plex Mono',monospace;}
+  .board td.metric{text-align:right;font-family:'IBM Plex Mono',monospace;color:var(--text-lo);}
+  .board td.metric b{font-weight:600;}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px;align-items:start;}
+  @media(max-width:900px){.grid-2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark"><span>O</span></div>
+      <div class="titles">
+        <h1 id="view-title">Innovation Team</h1>
+        <p>Origa · Lead Performance Overview</p>
+        <div class="view-switch" id="view-switch">
+          <button type="button" data-view-target="innovation" class="active">Innovation Team</button>
+          <button type="button" data-view-target="leadership">Leadership</button>
+          <button type="button" data-view-target="buadmin">BU Admin</button>
+        </div>
+      </div>
+    </div>
+    <div class="asof">Data as of<br><b>21 Aug 2026, 09:00</b></div>
+  </div>
+
+  <!-- ============ SECTION 01: FUNNEL ============ -->
+  <div class="section-label">
+    <span class="num">01</span>
+    <h2>Lead-to-Sale Funnel</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="panel" style="margin-bottom:14px;padding:16px 20px;">
+    <div class="panel-title" style="margin-bottom:12px;">Timeframe</div>
+    <div id="tf-01" class="filters" style="margin-bottom:0;"></div>
+  </div>
+  <div id="filters-01" class="filters"></div>
+
+  <div class="panel" style="margin-bottom:22px;">
+    <div class="grid-2" style="margin-top:0;grid-template-columns:0.85fr 1.15fr;align-items:stretch;">
+      <div>
+        <svg id="funnelchart" viewBox="0 0 460 380"></svg>
+      </div>
+      <div style="display:flex;flex-direction:column;height:100%;">
+        <div class="panel-title">Conversion between any two stages (including non-adjacent, e.g. Leads Qualified → Units Sold)</div>
+        <div id="matrixwrap" style="flex:1;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 02 ============ -->
+  <div class="section-label">
+    <span class="num">02</span>
+    <h2>Lead-to-Qualify Conversion</h2>
+    <div class="rule"></div>
+    <span class="trend-badge">Fixed, trailing 12 months</span>
+  </div>
+  <div id="filters-02" class="filters"></div>
+
+  <div class="panel" style="margin-bottom:22px;">
+    <div class="trend-legend" id="combo-legend"></div>
+    <div class="chart-wrap">
+      <svg id="combochart" viewBox="0 0 980 280"></svg>
+      <div class="chart-tooltip" id="combo-tooltip"></div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 03 ============ -->
+  <div class="section-label">
+    <span class="num">03</span>
+    <h2>Qualify-to-Unit Sold Conversion</h2>
+    <div class="rule"></div>
+    <span class="trend-badge">Uses Section 02's filters</span>
+  </div>
+
+  <div class="panel" style="margin-bottom:22px;">
+    <div class="trend-legend" id="qualsold-legend"></div>
+    <div class="chart-wrap">
+      <svg id="qualsoldchart" viewBox="0 0 980 280"></svg>
+      <div class="chart-tooltip" id="qualsold-tooltip"></div>
+    </div>
+    <div class="panel-title" style="margin-top:18px;">Underlying unit values</div>
+    <div class="table-scroll">
+      <table class="bu-table compact centered" id="qualsold-units-table">
+        <thead><tr><th class="left">Stage</th></tr></thead>
+        <tbody id="qualsold-units-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 04 shared header ============ -->
+  <div class="section-label">
+    <span class="num">04</span>
+    <h2 id="s04-title">Leads by Business Unit</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="panel" style="margin-bottom:14px;padding:16px 20px;">
+    <div class="panel-title" style="margin-bottom:12px;">Timeframe &amp; Comparison</div>
+    <div id="tf-04" class="filters" style="margin-bottom:12px;"></div>
+    <div id="filters-04-delta" class="filters" style="margin-bottom:0;"></div>
+  </div>
+
+  <div data-view="innovation">
+    <div class="panel" style="margin-bottom:22px;">
+      <div class="panel-title" style="display:block;">
+        Funnel performance by BU (15 BUs)
+      </div>
+      <div class="table-scroll">
+        <table class="bu-table compact centered">
+          <thead>
+            <tr>
+              <th rowspan="2">#</th><th rowspan="2" class="left">BU</th>
+              <th colspan="2" class="group-header grp-leads">Leads Generated</th>
+              <th colspan="2" class="group-header grp-qualified grp-subdivider">Leads Qualified</th>
+              <th colspan="2" class="group-header grp-gallery grp-subdivider">Gallery Visited</th>
+              <th colspan="2" class="group-header grp-booked grp-subdivider">Units Booked</th>
+              <th colspan="2" class="group-header grp-sold grp-subdivider">Units Sold</th>
+              <th colspan="2" class="group-header grp-rate grp-divider">Lead→Qual</th>
+              <th colspan="2" class="group-header grp-rate grp-subdivider">Qual→Gallery</th>
+              <th colspan="2" class="group-header grp-rate grp-subdivider">Qual→Booked</th>
+              <th colspan="2" class="group-header grp-rate grp-subdivider">Qual→Sold</th>
+            </tr>
+            <tr>
+              <th class="grp-leads">#</th><th class="grp-leads">Δ%</th>
+              <th class="grp-qualified grp-subdivider">#</th><th class="grp-qualified">Δ%</th>
+              <th class="grp-gallery grp-subdivider">#</th><th class="grp-gallery">Δ%</th>
+              <th class="grp-booked grp-subdivider">#</th><th class="grp-booked">Δ%</th>
+              <th class="grp-sold grp-subdivider">#</th><th class="grp-sold">Δ%</th>
+              <th class="grp-rate grp-divider">%</th><th class="grp-rate">Δpp</th>
+              <th class="grp-rate grp-subdivider">%</th><th class="grp-rate">Δpp</th>
+              <th class="grp-rate grp-subdivider">%</th><th class="grp-rate">Δpp</th>
+              <th class="grp-rate grp-subdivider">%</th><th class="grp-rate">Δpp</th>
+            </tr>
+          </thead>
+          <tbody id="bu-table-body"></tbody>
+        </table>
+      </div>
+      <div class="footnote">Delta metrics % is controlled by referenced end date. Please ensure the right date is used, especially when "BU Average" is selected.</div>
+    </div>
+  </div>
+
+  <div data-view="leadership">
+    <div class="panel" style="margin-bottom:22px;">
+      <div class="panel-title" style="display:block;">
+        Leads by BU (15 BUs) — counts &amp; comparison only
+      </div>
+      <div class="table-scroll">
+        <table class="bu-table compact centered">
+          <thead>
+            <tr>
+              <th rowspan="2">#</th><th rowspan="2" class="left">BU</th>
+              <th colspan="2" class="group-header grp-leads">Leads Generated</th>
+              <th colspan="2" class="group-header grp-qualified grp-subdivider">Leads Qualified</th>
+              <th colspan="2" class="group-header grp-gallery grp-subdivider">Gallery Visited</th>
+              <th colspan="2" class="group-header grp-booked grp-subdivider">Units Booked</th>
+              <th colspan="2" class="group-header grp-sold grp-subdivider">Units Sold</th>
+              <th class="group-header grp-rate grp-divider">Lead→Qual</th>
+              <th class="group-header grp-rate grp-subdivider">Qual→Gallery</th>
+              <th class="group-header grp-rate grp-subdivider">Qual→Booked</th>
+              <th class="group-header grp-rate grp-subdivider">Qual→Sold</th>
+            </tr>
+            <tr>
+              <th class="grp-leads">#</th><th class="grp-leads">Δ%</th>
+              <th class="grp-qualified grp-subdivider">#</th><th class="grp-qualified">Δ%</th>
+              <th class="grp-gallery grp-subdivider">#</th><th class="grp-gallery">Δ%</th>
+              <th class="grp-booked grp-subdivider">#</th><th class="grp-booked">Δ%</th>
+              <th class="grp-sold grp-subdivider">#</th><th class="grp-sold">Δ%</th>
+              <th class="grp-rate grp-divider">%</th>
+              <th class="grp-rate grp-subdivider">%</th>
+              <th class="grp-rate grp-subdivider">%</th>
+              <th class="grp-rate grp-subdivider">%</th>
+            </tr>
+          </thead>
+          <tbody id="bu-table-body-ltd"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-view="buadmin">
+    <div class="panel" style="margin-bottom:22px;">
+      <div class="panel-title" style="display:block;">
+        Leads by ad campaign (Ads 1–10) — counts &amp; comparison only
+      </div>
+      <div class="table-scroll">
+        <table class="bu-table compact centered">
+          <thead>
+            <tr>
+              <th rowspan="2">#</th><th rowspan="2" class="left">Ads</th>
+              <th colspan="2" class="group-header grp-leads">Leads Generated</th>
+              <th colspan="2" class="group-header grp-qualified grp-subdivider">Leads Qualified</th>
+              <th colspan="2" class="group-header grp-gallery grp-subdivider">Gallery Visited</th>
+              <th colspan="2" class="group-header grp-booked grp-subdivider">Units Booked</th>
+              <th colspan="2" class="group-header grp-sold grp-subdivider">Units Sold</th>
+            </tr>
+            <tr>
+              <th class="grp-leads">#</th><th class="grp-leads">Δ%</th>
+              <th class="grp-qualified grp-subdivider">#</th><th class="grp-qualified">Δ%</th>
+              <th class="grp-gallery grp-subdivider">#</th><th class="grp-gallery">Δ%</th>
+              <th class="grp-booked grp-subdivider">#</th><th class="grp-booked">Δ%</th>
+              <th class="grp-sold grp-subdivider">#</th><th class="grp-sold">Δ%</th>
+            </tr>
+          </thead>
+          <tbody id="ads-table-body"></tbody>
+        </table>
+      </div>
+      <div class="footnote">Ad channels replace BUs since a BU Admin only sees their own BU — this splits that BU's leads by ad campaign instead.</div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 05: Monthly Stage Conversion by BU ============ -->
+  <div class="section-label">
+    <span class="num">05</span>
+    <h2>Monthly Stage Conversion by BU</h2>
+    <div class="rule"></div>
+    <span class="trend-badge">Fixed, trailing 12 months</span>
+  </div>
+  <div class="panel" style="margin-bottom:14px;padding:16px 20px;">
+    <div class="combo-controls">
+      <div class="filter" style="min-width:200px;flex:none;">
+        <label>From Stage</label>
+        <select id="f-conv-from">
+          <option value="leads" selected>Leads Generated</option>
+          <option value="qualified">Leads Qualified</option>
+          <option value="gallery">Gallery Visited</option>
+          <option value="booked">Units Booked</option>
+        </select>
+      </div>
+      <div class="filter" style="min-width:200px;flex:none;">
+        <label>To Stage</label>
+        <select id="f-conv-to">
+          <option value="qualified" selected>Leads Qualified</option>
+          <option value="gallery">Gallery Visited</option>
+          <option value="booked">Units Booked</option>
+          <option value="sold">Units Sold</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-bottom:22px;">
+    <div class="panel-title" id="conv-table-title">Leads Generated → Leads Qualified, by BU (each cell: from → to, conversion %)</div>
+    <div class="table-scroll">
+      <table class="bu-table compact centered" id="conv-table">
+        <thead><tr id="conv-table-head"><th class="left">BU</th></tr></thead>
+        <tbody id="conv-table-body"></tbody>
+      </table>
+    </div>
+    <div class="footnote">Uses the shared Lead Type and Project filters; not affected by the BU Name selection, since this always shows all 15 BUs.</div>
+  </div>
+
+  <!-- ============ SECTION 06 (innovation + buadmin only) ============ -->
+  <div data-view="innovation buadmin">
+    <div class="section-label">
+      <span class="num">06</span>
+      <h2>Speed-to-Lead & Aging Metrics</h2>
+      <div class="rule"></div>
+      <span class="trend-badge">Fixed Jan–Aug 2026</span>
+    </div>
+    <div id="filters-05" class="filters"></div>
+    <div class="panel" style="margin-bottom:22px;">
+      <div class="trend-legend" id="ops-legend"></div>
+      <svg id="opschart" viewBox="0 0 980 280"></svg>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 06 ============ -->
+  <div class="section-label">
+    <span class="num">07</span>
+    <h2 id="s06-title">Speed-to-Lead & Aging Metrics by BU</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="panel" style="margin-bottom:14px;padding:16px 20px;">
+    <div class="panel-title" style="margin-bottom:12px;">Timeframe (Speed-to-Lead &amp; Aging Metrics)</div>
+    <div id="tf-06" class="filters" style="margin-bottom:0;"></div>
+  </div>
+
+  <div data-view="innovation">
+    <div id="filters-06" class="filters"></div>
+    <div class="panel" style="margin-bottom:22px;">
+      <div class="panel-title" style="display:block;">
+        Time metrics by BU (15 BUs)
+      </div>
+      <div class="table-scroll">
+        <table class="bu-table compact centered">
+          <thead>
+            <tr>
+              <th rowspan="3">#</th><th rowspan="3" class="left">BU</th>
+              <th colspan="3" class="group-header grp-origa">Origa</th>
+              <th colspan="16" class="group-header grp-staff grp-divider">Sales Staff</th>
+            </tr>
+            <tr>
+              <th colspan="2" class="group-header grp-origa">Qual. Time</th><th class="group-header grp-origa">Leads Qualified</th>
+              <th colspan="3" class="group-header grp-staff grp-divider">Qualified Contacted</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Qualified Uncontacted</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Time to First Contact</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Aging Time of Last Activity</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Gallery Visited</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Units Booked</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Units Sold</th>
+            </tr>
+            <tr>
+              <th class="grp-origa">hrs</th><th class="grp-origa">Δ%</th><th class="grp-origa">#</th>
+              <th class="grp-staff grp-divider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">hrs</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">days</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th><th class="grp-staff">GDV</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th><th class="grp-staff">GDV</th>
+            </tr>
+          </thead>
+          <tbody id="ops-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-view="leadership">
+    <div id="filters-06-leadership" class="filters"></div>
+    <div class="panel" style="margin-bottom:22px;">
+      <div class="panel-title" style="display:block;">
+        Time metrics by BU (15 BUs)
+      </div>
+      <div class="table-scroll">
+        <table class="bu-table compact centered">
+          <thead>
+            <tr>
+              <th rowspan="3">#</th><th rowspan="3" class="left">BU</th>
+              <th class="group-header grp-origa">Origa</th>
+              <th colspan="8" class="group-header grp-staff grp-divider">Sales Staff</th>
+            </tr>
+            <tr>
+              <th class="group-header grp-origa">Leads Qualified</th>
+              <th colspan="3" class="group-header grp-staff grp-divider">Qualified Contacted</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Qualified Uncontacted</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Time to First Contact</th>
+            </tr>
+            <tr>
+              <th class="grp-origa">#</th>
+              <th class="grp-staff grp-divider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">hrs</th><th class="grp-staff">Δ%</th>
+            </tr>
+          </thead>
+          <tbody id="leadership-table-body"></tbody>
+        </table>
+      </div>
+      <div class="footnote">Avg. Qualification Time and Avg. Aging Time Uncontacted are excluded from this view.</div>
+    </div>
+  </div>
+
+  <div data-view="buadmin">
+    <div id="filters-06-staff" class="filters"></div>
+    <div class="panel" style="margin-bottom:22px;">
+      <div class="panel-title" style="display:block;">
+        Time metrics by sales staff (Staff 1–10)
+      </div>
+      <div class="table-scroll">
+        <table class="bu-table compact centered">
+          <thead>
+            <tr>
+              <th rowspan="3">#</th><th rowspan="3" class="left">Sales Staff</th>
+              <th class="group-header grp-origa">Origa</th>
+              <th colspan="18" class="group-header grp-staff grp-divider">Sales Staff</th>
+            </tr>
+            <tr>
+              <th class="group-header grp-origa">Leads Qualified</th>
+              <th colspan="3" class="group-header grp-staff grp-divider">Qualified Contacted</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Qualified Uncontacted</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Time to First Contact</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Aging Time of Last Activity</th>
+              <th colspan="2" class="group-header grp-staff grp-subdivider">Gallery Visited</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Units Booked</th>
+              <th colspan="3" class="group-header grp-staff grp-subdivider">Units Sold</th>
+            </tr>
+            <tr>
+              <th class="grp-origa">#</th>
+              <th class="grp-staff grp-divider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">%</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">hrs</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">days</th><th class="grp-staff">Δ%</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th><th class="grp-staff">GDV</th>
+              <th class="grp-staff grp-subdivider">#</th><th class="grp-staff">% Qual.</th><th class="grp-staff">GDV</th>
+            </tr>
+          </thead>
+          <tbody id="staff-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LEADERBOARDS ============ -->
+  <div class="section-label" data-view="leadership">
+    <span class="num">—</span>
+    <h2>Leaderboards</h2>
+    <div class="rule"></div>
+  </div>
+  <div id="filters-lb" class="filters" data-view="leadership"></div>
+  <div class="grid-2" data-view="leadership">
+    <div>
+      <div class="panel board">
+        <div class="board-header">
+          <h3 id="board-qual-title">Top 5 BUs — by Qualification Rate</h3>
+          <button class="toggle-btn" id="board-toggle">Show Bottom 5</button>
+        </div>
+        <table>
+          <thead><tr><th class="left"></th><th class="left">BU</th><th>Leads Qualified</th><th>Rate</th></tr></thead>
+          <tbody id="board-qual"></tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="panel board">
+        <div class="board-header"><h3 id="board-sales-title">Top 5 BUs — by Sales</h3></div>
+        <table>
+          <thead><tr><th class="left"></th><th class="left">BU</th><th>Units Sold</th><th>Sales (RM)</th></tr></thead>
+          <tbody id="board-sales"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-view="leadership">
+    <div class="panel board" style="margin-top:22px;">
+      <div class="board-header">
+        <h3 id="board-leadsmom-title">Top 5 BUs — by Leads Growth</h3>
+        <button class="toggle-btn" id="board-toggle-leadsmom">Show Bottom 5</button>
+      </div>
+      <div id="filters-lb-growth" class="filters" style="margin-bottom:12px;"></div>
+      <table>
+        <thead><tr><th class="left"></th><th class="left">BU</th><th>Leads Generated</th><th>Δ%</th></tr></thead>
+        <tbody id="board-leadsmom"></tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+  // ================= RNG =================
+  function mulberry32(seed){
+    return function(){
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  var rng = mulberry32(20260821);
+  function rand(min, max){ return min + rng() * (max - min); }
+  function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
+  function fmtRM(n){ return 'RM ' + Math.round(n).toLocaleString('en-US'); }
+  function pct(n){ return (n*100).toFixed(1) + '%'; }
+
+  // ================= BU base dataset =================
+  var BU_COUNT = 15;
+  var BUS = [];
+  for (var i = 1; i <= BU_COUNT; i++){
+    BUS.push({
+      id: 'BU' + i,
+      live: { leads: Math.round(rand(650, 2200)), qualRate: rand(0.42, 0.76) },
+      reactivated: { leads: Math.round(rand(200, 950)), qualRate: rand(0.22, 0.52) },
+      galleryRate: rand(0.28, 0.46),
+      bookedRate: rand(0.14, 0.26),
+      soldRate: rand(0.80, 0.95),
+      avgPrice: Math.round(rand(420000, 960000) / 1000) * 1000,
+      qualTimeBase: rand(10, 30), contactTimeBase: rand(24, 168), agingBase: rand(20, 85),
+      yoyGrowth: rand(0.85, 1.30), contactedRate: rand(0.55, 0.9)
+    });
+  }
+  BUS.forEach(function(bu){
+    var raw = [rand(0.2,0.5), rand(0.2,0.5), rand(0.2,0.5)];
+    var sum = raw[0]+raw[1]+raw[2];
+    bu.projectShares = raw.map(function(v){ return v/sum; });
+    // each project has its own conversion-rate character, not just a volume share —
+    // otherwise gallery/booked/sold ÷ qualified is identical no matter which project is picked.
+    bu.projectRateMult = [0,1,2].map(function(){ return { g: rand(0.75,1.3), b: rand(0.75,1.3), s: rand(0.75,1.3) }; });
+  });
+  function projectRateFactor(bu, projIds, key){
+    if (!projIds || projIds.length >= 3 || projIds.length === 0) return 1;
+    var num = 0, den = 0;
+    projIds.forEach(function(p){
+      var idx = PROJECT_INDEX[p], w = bu.projectShares[idx];
+      num += bu.projectRateMult[idx][key] * w; den += w;
+    });
+    return den ? num/den : 1;
+  }
+  function applyProjectRateVariance(bu, projIds, c){
+    if (!projIds || projIds.length >= 3) return c;
+    var gF = projectRateFactor(bu, projIds, 'g'), bF = projectRateFactor(bu, projIds, 'b'), sF = projectRateFactor(bu, projIds, 's');
+    return { leads: c.leads, qualified: c.qualified, gallery: c.gallery*gF, booked: c.booked*bF, sold: c.sold*sF };
+  }
+  // BU Admin: when a specific staff subset is selected, its own gallery/booked/sold
+  // conversion character should show up in the funnel/matrix and Sections 02/03 too —
+  // not just Section 06 — otherwise picking different staff shows identical rates.
+  function applyStaffRateVariance(staffList, c){
+    if (!staffList || !staffList.length) return c;
+    function blend(key){
+      var num=0, den=0;
+      staffList.forEach(function(s){ num += s[key]*s.share; den += s.share; });
+      return den ? num/den : 1;
+    }
+    var qF = blend('qualMult'), gF = blend('galleryMult'), bF = blend('bookedMult'), sF = blend('soldMult');
+    return { leads: c.leads, qualified: c.qualified*qF, gallery: c.gallery*gF, booked: c.booked*bF, sold: c.sold*sF };
+  }
+  var PROJECT_INDEX = { p1:0, p2:1, p3:2 };
+  function projectFactor(bu, projIds){
+    if (!projIds || projIds.length >= 3) return 1; // all 3 projects selected = full BU
+    if (projIds.length === 0) return 0;
+    var sum = 0;
+    projIds.forEach(function(p){ sum += bu.projectShares[PROJECT_INDEX[p]]; });
+    return sum;
+  }
+
+  var ADMIN_BU_ID = 'BU1';
+
+  // ================= Months / date range machinery =================
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+  var MONTHS_TREND = ['Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug']; // trailing 12 months ending Aug 2026 (Sections 02/03/05/06)
+  var CUM = [0,31,59,90,120,151,181,212,243]; // day-of-year (0-indexed) at start of each month, Jan..Sep
+  var EPOCH = new Date('2026-01-01T00:00:00');
+  function dayOfYear(dateStr){ var d = new Date(dateStr+'T00:00:00'); return Math.round((d-EPOCH)/86400000); }
+  function overlapDays(m, startDOY, endDOY){
+    var mStart = CUM[m], mEnd = CUM[m+1]-1;
+    var lo = Math.max(mStart, startDOY), hi = Math.min(mEnd, endDOY);
+    return Math.max(0, hi-lo+1);
+  }
+  function addDays(dateStr, days){
+    var d = new Date(dateStr+'T00:00:00'); d.setDate(d.getDate()+days);
+    return d.toISOString().slice(0,10);
+  }
+
+  BUS.forEach(function(bu){
+    bu.monthly = MONTHS.map(function(_, m){
+      var trend = 0.90 + (m/(MONTHS.length-1))*0.22;
+      function noisy(){ return Math.min(1.08, Math.max(0.82, trend*rand(0.94,1.06))); }
+      return { leadsFactor: rand(0.85,1.18), qualMult: noisy(), galleryMult: noisy(), bookedMult: noisy(), soldMult: noisy() };
+    });
+    // 12-month trend series (Sections 02/03/05/06) — decoupled from the real-date
+    // machinery above, which only spans Jan–Aug 2026.
+    bu.trendMonthly = MONTHS_TREND.map(function(_, m){
+      var trend = 0.90 + (m/(MONTHS_TREND.length-1))*0.22;
+      function noisy(){ return Math.min(1.08, Math.max(0.82, trend*rand(0.94,1.06))); }
+      return { leadsFactor: rand(0.85,1.18), qualMult: noisy(), galleryMult: noisy(), bookedMult: noisy(), soldMult: noisy() };
+    });
+    bu.opsMonthly = MONTHS_TREND.map(function(_, m){
+      var improve = 1.15 - (m/(MONTHS_TREND.length-1))*0.3;
+      function noisy(base){ return Math.max(base*0.5, base*improve*rand(0.9,1.1)); }
+      return { qualTimeHrs: Math.min(35, noisy(bu.qualTimeBase)), contactTimeHrs: Math.min(180, noisy(bu.contactTimeBase)), agingDays: Math.min(90, noisy(bu.agingBase)) };
+    });
+    // real-calendar-aligned (Jan–Aug 2026) version of the same trend, used by Section 06's
+    // date-based timeframe filter — kept separate from the 12-month trailing series above.
+    bu.opsMonthlyReal = MONTHS.map(function(_, m){
+      var improve = 1.15 - (m/(MONTHS.length-1))*0.3;
+      function noisy(base){ return Math.max(base*0.5, base*improve*rand(0.9,1.1)); }
+      return { qualTimeHrs: Math.min(35, noisy(bu.qualTimeBase)), contactTimeHrs: Math.min(180, noisy(bu.contactTimeBase)), agingDays: Math.min(90, noisy(bu.agingBase)) };
+    });
+    // month-to-month variation on the Contacted rate, so its Δ% has something real to show
+    bu.contactedRateTrend = MONTHS.map(function(){ return Math.min(0.95, Math.max(0.35, bu.contactedRate*rand(0.88,1.12))); });
+  });
+
+  // ================= BU Admin: Ads (funnel-only) and Sales Staff (funnel + own time metrics) =================
+  var AD_COUNT = 10, STAFF_COUNT = 10;
+  var ADS = [], STAFF = [];
+  (function(){
+    var raw = []; for (var k=0;k<AD_COUNT;k++) raw.push(rand(0.05,0.2));
+    var sum = raw.reduce(function(a,b){return a+b;},0);
+    for (var k=0;k<AD_COUNT;k++) ADS.push({
+      id:'Ads '+(k+1), share: raw[k]/sum, monthlyNoise: MONTHS.map(function(){ return rand(0.85,1.15); }),
+      // per-stage multipliers vary month to month (not a single static value) — otherwise the
+      // factor cancels out of any period-over-period delta%, making every ad look identical.
+      leadsMultTrend: MONTHS.map(function(){ return rand(0.75,1.3); }),
+      qualMultTrend: MONTHS.map(function(){ return rand(0.75,1.3); }),
+      galleryMultTrend: MONTHS.map(function(){ return rand(0.75,1.3); }),
+      bookedMultTrend: MONTHS.map(function(){ return rand(0.75,1.3); }),
+      soldMultTrend: MONTHS.map(function(){ return rand(0.75,1.3); })
+    });
+  })();
+  (function(){
+    var raw = []; for (var k=0;k<STAFF_COUNT;k++) raw.push(rand(0.05,0.2));
+    var sum = raw.reduce(function(a,b){return a+b;},0);
+    for (var k=0;k<STAFF_COUNT;k++){
+      var qualTimeBase = rand(10,30), contactTimeBase = rand(24,168), agingBase = rand(20,85);
+      var opsMonthly = MONTHS_TREND.map(function(_, m){
+        var improve = 1.15 - (m/(MONTHS_TREND.length-1))*0.3;
+        function noisy(base){ return Math.max(base*0.5, base*improve*rand(0.9,1.1)); }
+        return { qualTimeHrs: Math.min(35, noisy(qualTimeBase)), contactTimeHrs: Math.min(180, noisy(contactTimeBase)), agingDays: Math.min(90, noisy(agingBase)) };
+      });
+      var opsMonthlyReal = MONTHS.map(function(_, m){
+        var improve = 1.15 - (m/(MONTHS.length-1))*0.3;
+        function noisy(base){ return Math.max(base*0.5, base*improve*rand(0.9,1.1)); }
+        return { qualTimeHrs: Math.min(35, noisy(qualTimeBase)), contactTimeHrs: Math.min(180, noisy(contactTimeBase)), agingDays: Math.min(90, noisy(agingBase)) };
+      });
+      var staffContactedRate = rand(0.55,0.9);
+      STAFF.push({
+        id:'Staff '+(k+1), share: raw[k]/sum, monthlyNoise: MONTHS.map(function(){ return rand(0.85,1.15); }),
+        opsMonthly: opsMonthly, opsMonthlyReal: opsMonthlyReal, contactedRate: staffContactedRate,
+        contactedRateTrend: MONTHS.map(function(){ return Math.min(0.95, Math.max(0.35, staffContactedRate*rand(0.88,1.12))); }),
+        galleryMult: rand(0.75,1.3), bookedMult: rand(0.75,1.3), soldMult: rand(0.75,1.3), qualMult: rand(0.8,1.25)
+      });
+    }
+  })();
+
+  // ================= Stage registry (past-tense labels) =================
+  var STAGE_ORDER = ['leads','qualified','gallery','booked','sold'];
+  var STAGE_INFO = {
+    leads:     { label:'Total Valid Leads Generated', short:'Leads Generated',  color:'#7fa8d9' },
+    qualified: { label:'Leads Qualified',              short:'Leads Qualified', color:'#c8a24d' },
+    gallery:   { label:'Sales Gallery Visited',         short:'Gallery Visited',color:'#6fbf8b' },
+    booked:    { label:'Units Booked',                  short:'Units Booked',   color:'#d98198' },
+    sold:      { label:'Units Sold',                    short:'Units Sold',     color:'#a58fd9' }
+  };
+  var STAGE_PAIRS = [];
+  for (var spi=0; spi<STAGE_ORDER.length-1; spi++){
+    var fk = STAGE_ORDER[spi], tk = STAGE_ORDER[spi+1];
+    STAGE_PAIRS.push({ fromKey:fk, toKey:tk, label: STAGE_INFO[fk].short + ' → ' + STAGE_INFO[tk].short });
+  }
+
+  var OPS_METRICS = {
+    qualTimeHrs:    { label:'Avg. Qualification Time by Origa from When the Lead Is First Generated', short:'Qualification Time', unit:'hrs', color:'#c8a24d', axisMax:35 },
+    contactTimeHrs: { label:'Avg. Time to First Contact a Lead by Sales Staff', short:'Time to First Contact', unit:'hrs', color:'#7fa8d9', axisMax:180 },
+    agingDays:      { label:'Avg. Ongoing Time of a Lead That Has Yet to Be Contacted by Sales Staff', short:'Aging — Uncontacted', unit:'days', color:'#d98198', axisMax:90 }
+  };
+
+  // ================= date-range multiplier (continuous, blended across monthly buckets) =================
+  function computeRangeMultiplier(bu, startStr, endStr){
+    var s = dayOfYear(startStr), e = dayOfYear(endStr);
+    if (e < s) e = s;
+    var leadsMult=0, qualSum=0, gallerySum=0, bookedSum=0, soldSum=0, wSum=0;
+    for (var m=0;m<MONTHS.length;m++){
+      var days = overlapDays(m, s, e);
+      if (days<=0) continue;
+      var mo = bu.monthly[m];
+      leadsMult += mo.leadsFactor * (days/30);
+      qualSum += mo.qualMult*days; gallerySum += mo.galleryMult*days; bookedSum += mo.bookedMult*days; soldSum += mo.soldMult*days;
+      wSum += days;
+    }
+    return {
+      leadsMult: leadsMult || (e-s+1)/30*0.3,
+      qualMult: wSum? qualSum/wSum : 1, galleryMult: wSum? gallerySum/wSum : 1,
+      bookedMult: wSum? bookedSum/wSum : 1, soldMult: wSum? soldSum/wSum : 1
+    };
+  }
+  function computeBURangeCounts(bu, leadType, startStr, endStr, projFactor){
+    projFactor = projFactor || 1;
+    var rm = computeRangeMultiplier(bu, startStr, endStr);
+    var base = bu[leadType];
+    var leads = base.leads * rm.leadsMult * projFactor;
+    var qualified = leads * Math.min(0.95, base.qualRate * rm.qualMult);
+    var gallery = qualified * Math.min(0.95, bu.galleryRate * rm.galleryMult);
+    var booked = gallery * Math.min(0.95, bu.bookedRate * rm.bookedMult);
+    var sold = booked * Math.min(0.99, bu.soldRate * rm.soldMult);
+    return { leads:leads, qualified:qualified, gallery:gallery, booked:booked, sold:sold };
+  }
+
+  // ================= Timeframe filter component (Standard WoW/MoM/QoQ/YoY, or Flexible) =================
+  // Reusable across Section 01 and Section 04, each with its own independent state.
+  var TIMEFRAME_DURATIONS = { wow:7, mom:30, qoq:91, yoy:365 };
+  var TIMEFRAME_MODE_LABEL = {
+    wow:'Standard: Week-on-Week', mom:'Standard: Month-on-Month',
+    qoq:'Standard: Quarter-on-Quarter', yoy:'Standard: Year-on-Year', flexible:'Flexible'
+  };
+  function makeTimeframeState(){
+    return { mode:'mom', currentEnd:'2026-08-21', comparisonEnd:'2026-07-22', currentStart:'2026-08-01', comparisonStart:'2026-07-01' };
+  }
+  var TIMEFRAME = { s01: makeTimeframeState(), s04: makeTimeframeState(), s06: makeTimeframeState() };
+
+  // day-blended average of a real-calendar-aligned (Jan–Aug) ops-time series over a date range
+  function computeOpsRangeAverage(opsMonthlyReal, startStr, endStr){
+    var s = dayOfYear(startStr), e = dayOfYear(endStr);
+    if (e < s) e = s;
+    var sums = { qualTimeHrs:0, contactTimeHrs:0, agingDays:0 }, totalDays = 0;
+    for (var m=0; m<MONTHS.length; m++){
+      var days = overlapDays(m, s, e);
+      if (days <= 0) continue;
+      var mo = opsMonthlyReal[m];
+      sums.qualTimeHrs += mo.qualTimeHrs*days; sums.contactTimeHrs += mo.contactTimeHrs*days; sums.agingDays += mo.agingDays*days;
+      totalDays += days;
+    }
+    if (!totalDays) return opsMonthlyReal[opsMonthlyReal.length-1];
+    return { qualTimeHrs: sums.qualTimeHrs/totalDays, contactTimeHrs: sums.contactTimeHrs/totalDays, agingDays: sums.agingDays/totalDays };
+  }
+  // same day-blended averaging, for a single scalar real-date trend (e.g. Contacted rate)
+  function computeScalarRangeAverage(trendArr, startStr, endStr){
+    var s = dayOfYear(startStr), e = dayOfYear(endStr);
+    if (e < s) e = s;
+    var sum = 0, totalDays = 0;
+    for (var m=0; m<MONTHS.length; m++){
+      var days = overlapDays(m, s, e);
+      if (days <= 0) continue;
+      sum += trendArr[m]*days; totalDays += days;
+    }
+    return totalDays ? sum/totalDays : trendArr[trendArr.length-1];
+  }
+
+  function lastDayOfMonth(yyyymm){
+    var p = yyyymm.split('-'); var y = +p[0], m = +p[1];
+    var days = new Date(y, m, 0).getDate();
+    return yyyymm+'-'+String(days).padStart(2,'0');
+  }
+  function resolveTimeframe(state){
+    if (state.mode === 'flexible'){
+      return { currentStart:state.currentStart, currentEnd:state.currentEnd, comparisonStart:state.comparisonStart, comparisonEnd:state.comparisonEnd };
+    }
+    var dur = TIMEFRAME_DURATIONS[state.mode];
+    return {
+      currentStart: addDays(state.currentEnd, -(dur-1)), currentEnd: state.currentEnd,
+      comparisonStart: addDays(state.comparisonEnd, -(dur-1)), comparisonEnd: state.comparisonEnd
+    };
+  }
+  function renderTimeframeDateFields(key){
+    var state = TIMEFRAME[key];
+    var container = document.getElementById('tf-dates-'+key);
+    if (!container) return;
+    var leadershipMode = currentView === 'leadership'; // month-level granularity, no Flexible option available there
+    var fields = (!leadershipMode && state.mode === 'flexible')
+      ? [['comparisonStart','Referenced Start Date'],['comparisonEnd','Referenced End Date'],['currentStart','Evaluated Start Date'],['currentEnd','Evaluated End Date']]
+      : [['comparisonEnd','Referenced End Date'],['currentEnd','Evaluated End Date']];
+    if (leadershipMode){
+      container.innerHTML = fields.map(function(f){
+        return '<div class="filter"><label>'+f[1]+'</label><input type="month" data-tf="'+key+'" data-tf-field="'+f[0]+'" value="'+state[f[0]].slice(0,7)+'" min="2026-01" max="2026-08"></div>';
+      }).join('');
+      container.querySelectorAll('input[type=month]').forEach(function(inp){
+        inp.addEventListener('change', function(){
+          TIMEFRAME[key][inp.getAttribute('data-tf-field')] = lastDayOfMonth(inp.value);
+          render();
+        });
+      });
+      return;
+    }
+    container.innerHTML = fields.map(function(f){
+      return '<div class="filter"><label>'+f[1]+'</label><input type="date" data-tf="'+key+'" data-tf-field="'+f[0]+'" value="'+state[f[0]]+'" min="2026-01-01" max="2026-08-21"></div>';
+    }).join('');
+    container.querySelectorAll('input[type=date]').forEach(function(inp){
+      inp.addEventListener('change', function(){
+        TIMEFRAME[key][inp.getAttribute('data-tf-field')] = inp.value;
+        render();
+      });
+    });
+  }
+  function renderTimeframeControl(key, containerId){
+    var state = TIMEFRAME[key];
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var allowedModes = currentView === 'leadership' ? ['mom','qoq','yoy'] : Object.keys(TIMEFRAME_MODE_LABEL);
+    if (allowedModes.indexOf(state.mode) === -1) state.mode = 'mom';
+    el.innerHTML =
+      '<div class="filter"><label>Comparison Type</label><select id="tf-mode-'+key+'">'+
+        allowedModes.map(function(m){ return '<option value="'+m+'"'+(m===state.mode?' selected':'')+'>'+TIMEFRAME_MODE_LABEL[m]+'</option>'; }).join('')+
+      '</select></div>'+
+      '<div class="filters" id="tf-dates-'+key+'" style="margin-bottom:0;"></div>';
+    document.getElementById('tf-mode-'+key).addEventListener('change', function(){
+      state.mode = this.value;
+      renderTimeframeDateFields(key);
+      render();
+    });
+    renderTimeframeDateFields(key);
+  }
+
+  // one BU's stage counts for a single specific month index (0=Jan..7=Aug)
+  function computeBUMonth(bu, leadType, m, projFactor){
+    projFactor = projFactor || 1;
+    var mo = bu.monthly[m];
+    var base = bu[leadType];
+    var leads = base.leads * mo.leadsFactor * projFactor;
+    var qualified = leads * Math.min(0.95, base.qualRate * mo.qualMult);
+    var gallery = qualified * Math.min(0.95, bu.galleryRate * mo.galleryMult);
+    var booked = gallery * Math.min(0.95, bu.bookedRate * mo.bookedMult);
+    var sold = booked * Math.min(0.99, bu.soldRate * mo.soldMult);
+    return { leads:leads, qualified:qualified, gallery:gallery, booked:booked, sold:sold };
+  }
+  function avgCounts(list){
+    var t = { leads:0,qualified:0,gallery:0,booked:0,sold:0 };
+    list.forEach(function(c){ STAGE_ORDER.forEach(function(k){ t[k]+=c[k]; }); });
+    STAGE_ORDER.forEach(function(k){ t[k] = t[k]/list.length; });
+    return t;
+  }
+  function scaleCounts(c, f){
+    var r = {}; STAGE_ORDER.forEach(function(k){ r[k]=c[k]*f; }); return r;
+  }
+
+  // current/previous pair for the selected comparison granularity
+  function computeComparisonPair(bu, leadType, projFactor, granularity){
+    if (granularity === 'wow'){
+      return {
+        current: computeBURangeCounts(bu, leadType, '2026-08-15','2026-08-21', projFactor),
+        previous: computeBURangeCounts(bu, leadType, '2026-08-08','2026-08-14', projFactor)
+      };
+    }
+    if (granularity === 'qoq'){
+      return {
+        current: avgCounts([computeBUMonth(bu,leadType,6,projFactor), computeBUMonth(bu,leadType,7,projFactor)]),
+        previous: avgCounts([computeBUMonth(bu,leadType,3,projFactor), computeBUMonth(bu,leadType,4,projFactor), computeBUMonth(bu,leadType,5,projFactor)])
+      };
+    }
+    if (granularity === 'yoy'){
+      var cur = computeBUMonth(bu, leadType, 7, projFactor);
+      return { current: cur, previous: scaleCounts(cur, 1/bu.yoyGrowth) };
+    }
+    // default: mom
+    return { current: computeBUMonth(bu,leadType,7,projFactor), previous: computeBUMonth(bu,leadType,6,projFactor) };
+  }
+
+  var COMPARISON_LABELS = { wow:'Week-on-Week (last 7 days vs. previous 7 days)', mom:'Month-on-Month (Aug vs. Jul)', qoq:'Quarter-on-Quarter (Jul–Aug avg vs. Apr–Jun avg)', yoy:'Year-on-Year (Aug 2026 vs. Aug 2025, synthetic)' };
+
+  // ================= "nice" axis scaling =================
+  function niceAxisMax(maxVal){
+    var candidates = [0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.75,0.8,0.9,1.0];
+    for (var i=0;i<candidates.length;i++){ if (maxVal <= candidates[i]) return candidates[i]; }
+    return 1.0;
+  }
+
+  // ================= per-section filter rows =================
+  // Each section gets its own physical filter controls instead of one shared bar.
+  // Controls that represent the same underlying filter share a data-sync/data-sync-group key
+  // and are kept in sync (and trigger the same re-render) no matter which instance changes.
+  var MULTISELECT_OPTIONS = {
+    bu:      function(){ return BUS.map(function(b){ return { id:b.id, label:b.id }; }); },
+    staff:   function(){ return STAFF.map(function(s){ return { id:s.id, label:s.id }; }); },
+    project: function(){ return [{id:'p1',label:'Project 1'},{id:'p2',label:'Project 2'},{id:'p3',label:'Project 3'}]; }
+  };
+  var MULTISELECT_ALL_LABEL = { bu:'All BUs', staff:'All Staff', project:'All Projects' };
+  var MULTISELECT_NOUN = { bu:'BUs', staff:'Staff', project:'Projects' };
+  var MULTISELECT_STATE = {
+    bu: BUS.map(function(b){ return b.id; }),
+    staff: STAFF.map(function(s){ return s.id; }),
+    project: ['p1','p2','p3']
+  };
+
+  function renderMultiselect(group, id){
+    var opts = MULTISELECT_OPTIONS[group]();
+    var boxes = '<label class="all-row"><input type="checkbox" class="ms-all"> '+MULTISELECT_ALL_LABEL[group]+'</label>' +
+      opts.map(function(o){ return '<label><input type="checkbox" class="ms-item" value="'+o.id+'"> '+o.label+'</label>'; }).join('');
+    return '<div class="ms-wrap" data-sync-group="'+group+'">'+
+        '<button type="button" class="ms-toggle" id="'+id+'-toggle">'+MULTISELECT_ALL_LABEL[group]+'</button>'+
+        '<div class="ms-panel" id="'+id+'-panel">'+boxes+'</div>'+
+      '</div>';
+  }
+
+  var FILTER_FIELD = {
+    start: function(id){ return '<div class="filter"><label>Start Date</label><input type="date" id="'+id+'" data-sync="start" value="2026-08-01" min="2026-01-01" max="2026-08-21"></div>'; },
+    end:   function(id){ return '<div class="filter"><label>End Date</label><input type="date" id="'+id+'" data-sync="end" value="2026-08-21" min="2026-01-01" max="2026-08-21"></div>'; },
+    bu:    function(id){
+      if (currentView === 'buadmin') return '<div class="filter"><label>BU Name</label><div class="badge-static">Your BU: BU1</div></div>';
+      return '<div class="filter"><label>BU Name</label>'+renderMultiselect('bu', id)+'</div>';
+    },
+    staff: function(id){
+      if (currentView !== 'buadmin') return '';
+      return '<div class="filter"><label>Sales Staff</label>'+renderMultiselect('staff', id)+'</div>';
+    },
+    project: function(id){
+      return '<div class="filter"><label>Project</label>'+renderMultiselect('project', id)+'</div>';
+    },
+    leadtype: function(id){
+      return '<div class="filter"><label>Lead Type</label><select id="'+id+'" data-sync="leadtype">'+
+        '<option value="live" selected>Live Lead</option><option value="reactivated">Reactivated Lead</option></select></div>';
+    },
+    comparison: function(id){
+      var excludeWow = id.indexOf('filters-06-leadership') === 0;
+      return '<div class="filter"><label>Comparison Period</label><select id="'+id+'" data-sync="comparison">'+
+        (excludeWow ? '' : '<option value="wow">Week-on-Week</option>')+
+        '<option value="mom" selected>Month-on-Month</option><option value="qoq">Quarter-on-Quarter</option><option value="yoy">Year-on-Year</option></select></div>';
+    },
+    opsmetric: function(id){
+      return '<div class="filter"><label>Metric</label><select id="'+id+'" data-sync="opsmetric">'+
+        '<option value="qualTimeHrs">Avg. Qualification Time by Origa</option><option value="contactTimeHrs">Avg. Time to First Contact by Sales Staff</option><option value="agingDays">Avg. Ongoing Aging Time — Uncontacted</option></select></div>';
+    },
+    opsdelta: function(id){
+      if (currentView === 'buadmin'){
+        return '<div class="filter"><label>Delta Metrics</label><select id="'+id+'" data-sync="opsdelta">'+
+          '<option value="ownavg" selected>Own BU Average</option><option value="average">Group Wide BU Average</option></select></div>';
+      }
+      return '<div class="filter"><label>Delta Metrics</label><select id="'+id+'" data-sync="opsdelta">'+
+        '<option value="none" selected>No Comparison</option><option value="average">BU Average</option></select></div>';
+    },
+    staffdelta06: function(id){
+      return '<div class="filter"><label>Delta Metrics</label><select id="'+id+'" data-sync="staffdelta06">'+
+        '<option value="prior" selected>Staff Historical</option><option value="ownavg">BU Average</option><option value="average">Group Wide BU Average</option></select></div>';
+    },
+    delta06: function(id){
+      return '<div class="filter"><label>Delta Metrics</label><select id="'+id+'" data-sync="delta06">'+
+        '<option value="prior" selected>BU Historical</option><option value="average">BU Average</option></select></div>';
+    }
+  };
+  var FILTER_ROWS = {
+    'filters-01': ['bu','staff','project','leadtype'],
+    'filters-02': ['bu','staff','project','leadtype'],
+    'filters-05': ['bu','staff','opsmetric','opsdelta'],
+    'filters-06': ['delta06'],
+    'filters-06-leadership': ['delta06'],
+    'filters-06-staff': ['staffdelta06'],
+    'filters-lb': ['start','end','project','leadtype'],
+    'filters-lb-growth': ['comparison']
+  };
+  function renderAllFilterRows(){
+    Object.keys(FILTER_ROWS).forEach(function(containerId){
+      var el = document.getElementById(containerId);
+      if (!el) return;
+      var html = FILTER_ROWS[containerId].map(function(fieldKey, i){
+        return FILTER_FIELD[fieldKey](containerId+'-'+fieldKey);
+      }).join('');
+      el.innerHTML = html;
+    });
+    // wire sync + re-render on every plain-select/date control
+    document.querySelectorAll('[data-sync]').forEach(function(el){
+      el.addEventListener('change', function(){
+        var group = el.getAttribute('data-sync'), val = el.value;
+        document.querySelectorAll('[data-sync="'+group+'"]').forEach(function(other){ if (other !== el) other.value = val; });
+        render();
+      });
+    });
+    wireMultiselects();
+  }
+
+  // ---- multi-select tick lists (BU Name, Sales Staff, Project) — synced across every instance ----
+  function syncMultiselect(group){
+    var allOpts = MULTISELECT_OPTIONS[group]().map(function(o){ return o.id; });
+    var selected = MULTISELECT_STATE[group];
+    var allSelected = selected.length === allOpts.length;
+    document.querySelectorAll('.ms-wrap[data-sync-group="'+group+'"]').forEach(function(wrap){
+      var allBox = wrap.querySelector('.ms-all');
+      if (allBox) allBox.checked = allSelected;
+      wrap.querySelectorAll('.ms-item').forEach(function(cb){ cb.checked = selected.indexOf(cb.value) !== -1; });
+      var toggleBtn = wrap.querySelector('.ms-toggle');
+      if (toggleBtn){
+        toggleBtn.textContent = allSelected ? MULTISELECT_ALL_LABEL[group]
+          : selected.length === 0 ? 'None selected'
+          : selected.length === 1 ? selected[0]
+          : selected.length + ' ' + MULTISELECT_NOUN[group] + ' selected';
+      }
+    });
+  }
+  function wireMultiselects(){
+    document.querySelectorAll('.ms-toggle').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var panel = btn.nextElementSibling;
+        var isOpen = panel.classList.contains('open');
+        document.querySelectorAll('.ms-panel.open').forEach(function(p){ p.classList.remove('open'); });
+        if (!isOpen) panel.classList.add('open');
+      });
+    });
+    document.querySelectorAll('.ms-panel').forEach(function(panel){
+      panel.addEventListener('click', function(e){ e.stopPropagation(); });
+    });
+    document.querySelectorAll('.ms-wrap').forEach(function(wrap){
+      var group = wrap.getAttribute('data-sync-group');
+      var allOpts = MULTISELECT_OPTIONS[group]().map(function(o){ return o.id; });
+      var allBox = wrap.querySelector('.ms-all');
+      if (allBox){
+        allBox.addEventListener('change', function(){
+          MULTISELECT_STATE[group] = allBox.checked ? allOpts.slice() : [];
+          syncMultiselect(group); render();
+        });
+      }
+      wrap.querySelectorAll('.ms-item').forEach(function(cb){
+        cb.addEventListener('change', function(){
+          var sel = MULTISELECT_STATE[group];
+          if (cb.checked){ if (sel.indexOf(cb.value) === -1) sel.push(cb.value); }
+          else { MULTISELECT_STATE[group] = sel.filter(function(v){ return v !== cb.value; }); }
+          syncMultiselect(group); render();
+        });
+      });
+    });
+    ['bu','staff','project'].forEach(syncMultiselect);
+  }
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.ms-panel.open').forEach(function(p){ p.classList.remove('open'); });
+  });
+  function getFilterValue(group, fallback){
+    var el = document.querySelector('[data-sync="'+group+'"]');
+    return el ? el.value : fallback;
+  }
+
+  // ================= Section 01: SVG funnel + increments + GDV =================
+  function fmtRMCompact(n){
+    if (n >= 1e6) return 'RM'+(n/1e6).toFixed(1)+'M';
+    if (n >= 1e3) return 'RM'+(n/1e3).toFixed(0)+'K';
+    return fmtRM(n);
+  }
+  function fmtCompactNum(n){
+    if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+    if (n >= 1e3) return (n/1e3).toFixed(1)+'K';
+    return Math.round(n).toString();
+  }
+
+  // ================= Section 05: Monthly Stage Conversion by BU =================
+  function renderConvTable(){
+    var fromEl = document.getElementById('f-conv-from'), toEl = document.getElementById('f-conv-to');
+    if (!fromEl || !toEl) return;
+    var fromKey = fromEl.value, toKey = toEl.value;
+    var leadType = getFilterValue('leadtype', 'live');
+    var projChoice = MULTISELECT_STATE.project;
+    document.getElementById('conv-table-title').textContent =
+      STAGE_INFO[fromKey].short+' → '+STAGE_INFO[toKey].short+', by BU (each cell: from → to, conversion %)';
+    var head = document.getElementById('conv-table-head');
+    head.innerHTML = '<th class="left">BU</th>' + MONTHS_TREND.map(function(m){ return '<th>'+m+'</th>'; }).join('');
+    var tbody = document.getElementById('conv-table-body');
+    tbody.innerHTML = BUS.map(function(bu){
+      var pf = projectFactor(bu, projChoice);
+      var cells = MONTHS_TREND.map(function(_, m){
+        var c = computeBUTrendMonth(bu, leadType, m, pf);
+        var fromVal = c[fromKey], toVal = c[toKey];
+        var rate = fromVal ? toVal/fromVal : 0;
+        return '<td>'+fmtCompactNum(fromVal)+'→'+fmtCompactNum(toVal)+'<br><span style="color:var(--gold-soft);">'+pct(rate)+'</span></td>';
+      }).join('');
+      return '<tr><td class="left name">'+bu.id+'</td>'+cells+'</tr>';
+    }).join('');
+  }
+
+  function drawFunnel(current, previous, gdvBooked, gdvSold, sameDate){
+    var svg = document.getElementById('funnelchart');
+    var svgns = 'http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var W=460, rowH=76, H=rowH*STAGE_ORDER.length;
+    var maxBarW=210, textX=230;
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    var maxVal = current.leads || 1;
+    // fully proportional to value — only a hairline floor so a near-zero stage stays visible
+    function w(v){ return Math.max(4, (v/maxVal)*maxBarW); }
+
+    STAGE_ORDER.forEach(function(key, i){
+      var rowTop = i*rowH;
+      var bw = w(current[key]);
+      var rect = document.createElementNS(svgns,'rect');
+      rect.setAttribute('x', 0); rect.setAttribute('y', rowTop);
+      rect.setAttribute('width', bw); rect.setAttribute('height', rowH);
+      rect.setAttribute('fill', STAGE_INFO[key].color); rect.setAttribute('opacity','0.9');
+      rect.setAttribute('stroke','var(--navy-950)'); rect.setAttribute('stroke-width','1.5');
+      svg.appendChild(rect);
+
+      // label, value, increment — fixed text column to the right of the bars
+      var lbl = document.createElementNS(svgns,'text');
+      lbl.setAttribute('x', textX); lbl.setAttribute('y', rowTop+22);
+      lbl.setAttribute('text-anchor','start'); lbl.setAttribute('fill','var(--text-lo)');
+      lbl.setAttribute('font-family',"'IBM Plex Mono',monospace"); lbl.setAttribute('font-size','11'); lbl.setAttribute('letter-spacing','0.5');
+      lbl.textContent = STAGE_INFO[key].short;
+      svg.appendChild(lbl);
+
+      var val = document.createElementNS(svgns,'text');
+      val.setAttribute('x', textX); val.setAttribute('y', rowTop+46);
+      val.setAttribute('text-anchor','start'); val.setAttribute('fill', 'var(--text-hi)');
+      val.setAttribute('font-family',"'Fraunces',serif"); val.setAttribute('font-weight','600'); val.setAttribute('font-size','22');
+      val.textContent = fmt(current[key]);
+      svg.appendChild(val);
+
+      var prevV = previous[key] || 0;
+      var delta = sameDate ? 0 : current[key]-prevV;
+      var deltaPct = sameDate ? 0 : (prevV ? delta/prevV : 0);
+      var dCls = sameDate ? 'neutral' : (delta>=0 ? 'up' : 'down');
+      var dArrow = sameDate ? '–' : (delta>=0 ? '▲' : '▼');
+      var deltaStr = sameDate ? '– Same cohort (0.0%)' : (dArrow+' '+(delta>=0?'+':'')+fmt(delta)+' ('+(deltaPct>=0?'+':'')+(deltaPct*100).toFixed(1)+'%)');
+      if (key === 'booked' || key === 'sold'){
+        deltaStr += '  ·  GDV '+fmtRMCompact(key==='booked'?gdvBooked:gdvSold);
+      }
+      var dText = document.createElementNS(svgns,'text');
+      dText.setAttribute('x', textX); dText.setAttribute('y', rowTop+64);
+      dText.setAttribute('text-anchor','start'); dText.setAttribute('class','funnel-delta '+dCls);
+      dText.setAttribute('font-family',"'IBM Plex Mono',monospace"); dText.setAttribute('font-size','11');
+      dText.textContent = deltaStr;
+      svg.appendChild(dText);
+    });
+  }
+
+  function drawConversionMatrix(current){
+    var wrap = document.getElementById('matrixwrap');
+    var html = '<table class="matrix-table"><thead><tr><th></th>';
+    STAGE_ORDER.forEach(function(k){ html += '<th>'+STAGE_INFO[k].short+'</th>'; });
+    html += '</tr></thead><tbody>';
+    STAGE_ORDER.forEach(function(rk, ri){
+      html += '<tr><td class="from-label">'+STAGE_INFO[rk].short+'</td>';
+      STAGE_ORDER.forEach(function(ck, ci){
+        if (ci <= ri){ html += '<td class="diag">—</td>'; }
+        else {
+          var rate = current[rk] ? current[ck]/current[rk] : 0;
+          html += '<td class="val">'+pct(rate)+'</td>';
+        }
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  }
+
+  // ================= Section 02: Lead-to-Qualify (fixed, trailing 12 months) =================
+  function computeBUTrendMonth(bu, leadType, m, projFactor){
+    projFactor = projFactor || 1;
+    var mo = bu.trendMonthly[m];
+    var base = bu[leadType];
+    var leads = base.leads * mo.leadsFactor * projFactor;
+    var qualified = leads * Math.min(0.95, base.qualRate * mo.qualMult);
+    var gallery = qualified * Math.min(0.95, bu.galleryRate * mo.galleryMult);
+    var booked = gallery * Math.min(0.95, bu.bookedRate * mo.bookedMult);
+    var sold = booked * Math.min(0.99, bu.soldRate * mo.soldMult);
+    return { leads:leads, qualified:qualified, gallery:gallery, booked:booked, sold:sold };
+  }
+  function computeMonthlySeries(buList, leadType, projChoice){
+    return MONTHS_TREND.map(function(_, m){
+      var t = { leads:0,qualified:0,gallery:0,booked:0,sold:0 };
+      buList.forEach(function(bu){
+        var pf = projectFactor(bu, projChoice);
+        var c = computeBUTrendMonth(bu, leadType, m, pf);
+        STAGE_ORDER.forEach(function(k){ t[k]+=c[k]; });
+      });
+      return t;
+    });
+  }
+
+  // PowerBI-style hover tooltip: one invisible hit-rect per month, spanning full chart height.
+  function attachChartHover(svg, tooltipId, n, padL, groupW, H, buildContentFn){
+    var tooltip = document.getElementById(tooltipId);
+    var wrap = svg.closest('.chart-wrap');
+    var svgns = 'http://www.w3.org/2000/svg';
+    function position(e){
+      var rect = wrap.getBoundingClientRect();
+      var x = e.clientX-rect.left, y = e.clientY-rect.top;
+      var left = x+14, top = y-12;
+      if (left + 190 > rect.width) left = x-204;
+      tooltip.style.left = left+'px'; tooltip.style.top = Math.max(0,top)+'px';
+    }
+    for (var i=0;i<n;i++){
+      (function(idx){
+        var hit = document.createElementNS(svgns,'rect');
+        hit.setAttribute('x', padL+idx*groupW); hit.setAttribute('y', 0);
+        hit.setAttribute('width', groupW); hit.setAttribute('height', H);
+        hit.setAttribute('fill','transparent'); hit.style.cursor='pointer';
+        hit.addEventListener('mouseenter', function(){ tooltip.innerHTML = buildContentFn(idx); tooltip.style.display='block'; });
+        hit.addEventListener('mousemove', position);
+        hit.addEventListener('mouseleave', function(){ tooltip.style.display='none'; });
+        svg.appendChild(hit);
+      })(i);
+    }
+  }
+
+  function drawComboChart(series, pair){
+    var fromColor = STAGE_INFO[pair.fromKey].color, toColor = STAGE_INFO[pair.toKey].color;
+    var svg = document.getElementById('combochart');
+    var W=980,H=280,padL=56,padR=56,padT=18,padB=34;
+    var plotW=W-padL-padR, plotH=H-padT-padB, n=MONTHS_TREND.length, groupW=plotW/n, barW=Math.min(16,groupW*0.28), bottom=padT+plotH;
+    var fromArr = series.map(function(r){ return r[pair.fromKey]; });
+    var toArr = series.map(function(r){ return r[pair.toKey]; });
+    var rateArr = fromArr.map(function(v,i){ return toArr[i]/v || 0; });
+    var maxCount = Math.max.apply(null, fromArr)*1.18 || 1;
+    var axisMax = 1; // fixed 0–100%
+
+    function xGroup(i){ return padL + i*groupW + groupW/2; }
+    function yCount(v){ return bottom - (v/maxCount)*plotH; }
+    function yPct(v){ return padT + (1 - v/axisMax)*plotH; }
+
+    var svgns='http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+
+    [0,0.25,0.5,0.75,1].forEach(function(v){
+      var yy = padT+(1-v)*plotH;
+      var ln=document.createElementNS(svgns,'line');
+      ln.setAttribute('x1',padL); ln.setAttribute('x2',W-padR); ln.setAttribute('y1',yy); ln.setAttribute('y2',yy);
+      ln.setAttribute('stroke','#2a415d'); ln.setAttribute('stroke-width','1'); ln.setAttribute('stroke-dasharray','2,4');
+      svg.appendChild(ln);
+      var lblL=document.createElementNS(svgns,'text');
+      lblL.setAttribute('x',padL-8); lblL.setAttribute('y',yy+3); lblL.setAttribute('text-anchor','end'); lblL.setAttribute('class','trend-tip');
+      lblL.textContent = fmt(maxCount*v); svg.appendChild(lblL);
+      var lblR=document.createElementNS(svgns,'text');
+      lblR.setAttribute('x',W-padR+8); lblR.setAttribute('y',yy+3); lblR.setAttribute('text-anchor','start'); lblR.setAttribute('class','trend-tip');
+      lblR.textContent = Math.round(axisMax*v*100)+'%'; svg.appendChild(lblR);
+    });
+    MONTHS_TREND.forEach(function(m,i){
+      var lbl=document.createElementNS(svgns,'text');
+      lbl.setAttribute('x',xGroup(i)); lbl.setAttribute('y',H-8); lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','trend-tip');
+      lbl.setAttribute('font-size','8.5');
+      lbl.textContent=m; svg.appendChild(lbl);
+    });
+    fromArr.forEach(function(v,i){
+      var yy=yCount(v);
+      var rTotal=document.createElementNS(svgns,'rect');
+      rTotal.setAttribute('x',xGroup(i)-barW-2); rTotal.setAttribute('y',yy); rTotal.setAttribute('width',barW); rTotal.setAttribute('height',bottom-yy);
+      rTotal.setAttribute('fill',fromColor); rTotal.setAttribute('opacity','0.9'); svg.appendChild(rTotal);
+      var toV=toArr[i], yyTo=yCount(toV);
+      var rTo=document.createElementNS(svgns,'rect');
+      rTo.setAttribute('x',xGroup(i)+2); rTo.setAttribute('y',yyTo); rTo.setAttribute('width',barW); rTo.setAttribute('height',bottom-yyTo);
+      rTo.setAttribute('fill',toColor); svg.appendChild(rTo);
+    });
+    var pts = rateArr.map(function(v,i){ return xGroup(i)+','+yPct(v); }).join(' ');
+    var poly=document.createElementNS(svgns,'polyline');
+    poly.setAttribute('points',pts); poly.setAttribute('fill','none'); poly.setAttribute('stroke',toColor); poly.setAttribute('stroke-width','2.5');
+    poly.setAttribute('stroke-linecap','round'); poly.setAttribute('stroke-linejoin','round'); svg.appendChild(poly);
+    rateArr.forEach(function(v,i){
+      var c=document.createElementNS(svgns,'circle');
+      c.setAttribute('cx',xGroup(i)); c.setAttribute('cy',yPct(v)); c.setAttribute('r','3.5'); c.setAttribute('fill',toColor);
+      c.setAttribute('stroke','#101f30'); c.setAttribute('stroke-width','1.5'); svg.appendChild(c);
+      var lbl=document.createElementNS(svgns,'text');
+      lbl.setAttribute('x',xGroup(i)); lbl.setAttribute('y',yPct(v)-9); lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','trend-tip');
+      lbl.style.fill='var(--text-lo)'; lbl.textContent = pct(v); svg.appendChild(lbl);
+    });
+    var legend=document.getElementById('combo-legend');
+    legend.innerHTML =
+      '<span class="item"><span class="sq" style="background:'+fromColor+';"></span>'+STAGE_INFO[pair.fromKey].short+'</span>'+
+      '<span class="item"><span class="sq" style="background:'+toColor+';"></span>'+STAGE_INFO[pair.toKey].short+'</span>'+
+      '<span class="item"><span class="dot" style="background:'+toColor+';"></span>'+STAGE_INFO[pair.fromKey].short+' → '+STAGE_INFO[pair.toKey].short+'</span>';
+
+    attachChartHover(svg, 'combo-tooltip', n, padL, groupW, H, function(i){
+      return '<div class="tt-title">'+MONTHS_TREND[i]+'</div>'+
+        '<div class="tt-row"><span class="tt-dot" style="background:'+fromColor+';"></span>'+STAGE_INFO[pair.fromKey].short+': '+fmt(fromArr[i])+'</div>'+
+        '<div class="tt-row"><span class="tt-dot" style="background:'+toColor+';"></span>'+STAGE_INFO[pair.toKey].short+': '+fmt(toArr[i])+'</div>'+
+        '<div class="tt-row"><span class="tt-dot" style="background:'+toColor+';"></span>Conversion: '+pct(rateArr[i])+'</div>';
+    });
+  }
+
+  // ================= Section 03: Qualify-to-Sold, all rebased to Qualified =================
+  function drawQualifyToSoldChart(series){
+    var LAYERS = ['qualified','gallery','booked','sold'];
+    var svg = document.getElementById('qualsoldchart');
+    var W=980,H=280,padL=56,padR=24,padT=18,padB=34;
+    var plotW=W-padL-padR, plotH=H-padT-padB, n=MONTHS_TREND.length, groupW=plotW/n, bottom=padT+plotH;
+
+    var RATE_PAIRS = [
+      { toKey:'gallery', label:'Leads Qualified → '+STAGE_INFO.gallery.short },
+      { toKey:'booked',  label:'Leads Qualified → '+STAGE_INFO.booked.short },
+      { toKey:'sold',    label:'Leads Qualified → '+STAGE_INFO.sold.short }
+    ];
+    var axisMax = 1; // fixed 0–100%
+
+    function xGroup(i){ return padL + i*groupW + groupW/2; }
+    function yPct(v){ return padT + (1 - v/axisMax)*plotH; }
+
+    var svgns='http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+
+    [0,0.25,0.5,0.75,1].forEach(function(v){
+      var yy=padT+(1-v)*plotH;
+      var ln=document.createElementNS(svgns,'line');
+      ln.setAttribute('x1',padL); ln.setAttribute('x2',W-padR); ln.setAttribute('y1',yy); ln.setAttribute('y2',yy);
+      ln.setAttribute('stroke','#2a415d'); ln.setAttribute('stroke-width','1'); ln.setAttribute('stroke-dasharray','2,4');
+      svg.appendChild(ln);
+      var lblL=document.createElementNS(svgns,'text');
+      lblL.setAttribute('x',padL-8); lblL.setAttribute('y',yy+3); lblL.setAttribute('text-anchor','end'); lblL.setAttribute('class','trend-tip');
+      lblL.textContent = Math.round(axisMax*v*100)+'%'; svg.appendChild(lblL);
+    });
+    MONTHS_TREND.forEach(function(m,i){
+      var lbl=document.createElementNS(svgns,'text');
+      lbl.setAttribute('x',xGroup(i)); lbl.setAttribute('y',H-8); lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','trend-tip');
+      lbl.setAttribute('font-size','8.5');
+      lbl.textContent=m; svg.appendChild(lbl);
+    });
+    RATE_PAIRS.forEach(function(rp, ri){
+      var color = STAGE_INFO[rp.toKey].color;
+      var pts = series.map(function(row,i){ var rate = row.qualified ? row[rp.toKey]/row.qualified : 0; return xGroup(i)+','+yPct(rate); }).join(' ');
+      var poly=document.createElementNS(svgns,'polyline');
+      poly.setAttribute('points',pts); poly.setAttribute('fill','none'); poly.setAttribute('stroke',color); poly.setAttribute('stroke-width','2.5');
+      poly.setAttribute('stroke-linecap','round'); poly.setAttribute('stroke-linejoin','round'); svg.appendChild(poly);
+      series.forEach(function(row,i){
+        var rate = row.qualified ? row[rp.toKey]/row.qualified : 0;
+        var c=document.createElementNS(svgns,'circle');
+        c.setAttribute('cx',xGroup(i)); c.setAttribute('cy',yPct(rate)); c.setAttribute('r','3.5'); c.setAttribute('fill',color);
+        c.setAttribute('stroke','#101f30'); c.setAttribute('stroke-width','1.5'); svg.appendChild(c);
+      });
+    });
+    var legend=document.getElementById('qualsold-legend');
+    legend.innerHTML = RATE_PAIRS.map(function(rp){
+      return '<span class="item"><span class="dot" style="background:'+STAGE_INFO[rp.toKey].color+';"></span>'+rp.label+'</span>';
+    }).join('');
+
+    attachChartHover(svg, 'qualsold-tooltip', n, padL, groupW, H, function(i){
+      var row = series[i];
+      var html = '<div class="tt-title">'+MONTHS_TREND[i]+'</div>';
+      RATE_PAIRS.forEach(function(rp){
+        var rate = row.qualified ? row[rp.toKey]/row.qualified : 0;
+        html += '<div class="tt-row"><span class="tt-dot" style="background:'+STAGE_INFO[rp.toKey].color+';"></span>'+rp.label+': '+pct(rate)+'</div>';
+      });
+      return html;
+    });
+
+    // unit values (previously shown as bars) now live in a table below the chart
+    var theadRow = document.querySelector('#qualsold-units-table thead tr');
+    if (theadRow && theadRow.children.length === 1){
+      theadRow.innerHTML = '<th class="left">Stage</th>' + MONTHS_TREND.map(function(m){ return '<th>'+m+'</th>'; }).join('');
+    }
+    var tbody = document.getElementById('qualsold-units-body');
+    if (tbody){
+      tbody.innerHTML = LAYERS.map(function(key){
+        var cells = series.map(function(row){ return '<td>'+fmt(row[key])+'</td>'; }).join('');
+        return '<tr><td class="left name" style="color:'+STAGE_INFO[key].color+';">'+STAGE_INFO[key].short+'</td>'+cells+'</tr>';
+      }).join('');
+    }
+  }
+
+  // ================= shared helpers for Section 04 / 06 tables =================
+  function colorScale(v, min, max){
+    var t = max>min ? (v-min)/(max-min) : 0.5;
+    return t<0.5 ? 'rgba(217,83,83,'+(0.30*(1-t*2)).toFixed(2)+')' : 'rgba(111,191,139,'+(0.30*((t-0.5)*2)).toFixed(2)+')';
+  }
+  function colorScaleInverse(v, min, max){
+    var t = max>min ? (v-min)/(max-min) : 0.5;
+    return t<0.5 ? 'rgba(111,191,139,'+(0.30*(1-t*2)).toFixed(2)+')' : 'rgba(217,83,83,'+(0.30*((t-0.5)*2)).toFixed(2)+')';
+  }
+  function momCell(delta, neutral){
+    if (neutral) return '<td class="mom-cell"><span class="arrow neutral">–</span></td>';
+    var arrow = delta>=0 ? '▲' : '▼', cls = delta>=0 ? 'up' : 'down';
+    return '<td class="mom-cell"><span class="arrow '+cls+'">'+arrow+' '+(delta>=0?'+':'')+Math.round(delta*100)+'%</span></td>';
+  }
+  function momCellInverse(delta, neutral){
+    if (neutral) return '<td class="mom-cell"><span class="arrow neutral">–</span></td>';
+    // for time metrics: down = improved = green ("good"); up = worse = red ("bad")
+    var arrow = delta>=0 ? '▲' : '▼', cls = delta>=0 ? 'bad' : 'good';
+    return '<td class="mom-cell"><span class="arrow '+cls+'">'+arrow+' '+(delta>=0?'+':'')+Math.round(delta*100)+'%</span></td>';
+  }
+  function momPPCell(deltaPP, neutral){
+    if (neutral) return '<td class="mom-cell"><span class="arrow neutral">–</span></td>';
+    var arrow = deltaPP>=0 ? '▲' : '▼', cls = deltaPP>=0 ? 'up' : 'down';
+    return '<td class="mom-cell"><span class="arrow '+cls+'">'+arrow+' '+(deltaPP>=0?'+':'')+(deltaPP*100).toFixed(1)+'pp</span></td>';
+  }
+
+  function renderCountsTable(rows, tbodyId, wide, ratesOnly){
+    var stats = {};
+    STAGE_ORDER.forEach(function(key){
+      var vals = rows.map(function(r){ return r.current[key]; });
+      stats[key] = { min: Math.min.apply(null, vals), max: Math.max.apply(null, vals) || 1 };
+    });
+    var showRates = wide || ratesOnly;
+    var rateKeys = showRates ? ['qualRate','convGalleryRate','convBookedRate','convSoldRate'] : [];
+    if (showRates){
+      rateKeys.forEach(function(key){
+        var vals = rows.map(function(r){ return r.rateNow[key]; });
+        stats[key] = { min: Math.min.apply(null, vals), max: Math.max.apply(null, vals) || 1 };
+      });
+    }
+    var tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = rows.map(function(row, idx){
+      // Same-date neutral display only applies to "BU Historical" (an actual period-over-period
+      // comparison, where an identical window trivially means no change). "BU Average" compares
+      // against a cross-BU baseline, which is meaningful regardless of whether the two dates match.
+      var neutral = !!row.deltaNeutral;
+      var stageBlock = STAGE_ORDER.map(function(key, si){
+        var bg = colorScale(row.current[key], stats[key].min, stats[key].max);
+        var divCls = si === 0 ? '' : ' grp-subdivider';
+        return '<td class="'+divCls.trim()+'" style="background:'+bg+';">'+fmt(row.current[key])+'</td>' + momCell(row.mom[key], neutral);
+      }).join('');
+      var rateBlock = '';
+      if (wide){
+        rateBlock = rateKeys.map(function(key, ri){
+          var bg = colorScale(row.rateNow[key], stats[key].min, stats[key].max);
+          var divCls = ri === 0 ? 'grp-divider' : 'grp-subdivider';
+          return '<td class="'+divCls+'" style="background:'+bg+';">'+pct(row.rateNow[key])+'</td>' + momPPCell(row.ratePP[key], neutral);
+        }).join('');
+      } else if (ratesOnly){
+        rateBlock = rateKeys.map(function(key, ri){
+          var bg = colorScale(row.rateNow[key], stats[key].min, stats[key].max);
+          var divCls = ri === 0 ? 'grp-divider' : 'grp-subdivider';
+          return '<td class="'+divCls+'" style="background:'+bg+';">'+pct(row.rateNow[key])+'</td>';
+        }).join('');
+      }
+      return '<tr><td class="idx">'+(idx+1)+'</td><td class="name left">'+row.id+'</td>'+stageBlock+rateBlock+'</tr>';
+    }).join('');
+  }
+
+  // "BU Average" (and other non-prior modes) should reflect the REFERENCED period, not the
+  // evaluated one — otherwise moving the Referenced End Date has no effect on the baseline.
+  function computeStatBaseline(rows, key, statFn){ return statFn(rows.map(function(r){ return r.previous[key]; })); }
+  function applyDeltaMode(rows, mode, wide){
+    var rateKeys = wide ? ['qualRate','convGalleryRate','convBookedRate','convSoldRate'] : [];
+    if (mode === 'prior'){
+      rows.forEach(function(row){
+        row.deltaNeutral = !!row.sameDate;
+        var mom = {};
+        STAGE_ORDER.forEach(function(k){ mom[k] = row.sameDate ? 0 : (row.previous[k] ? (row.current[k]-row.previous[k])/row.previous[k] : 0); });
+        row.mom = mom;
+        if (wide){
+          var ratePP = {};
+          rateKeys.forEach(function(k){ ratePP[k] = row.sameDate ? 0 : (row.rateNow[k]-row.ratePrev[k]); });
+          row.ratePP = ratePP;
+        }
+      });
+      return;
+    }
+    var statFn = DELTA_STAT_FN[mode];
+    var baseline = {}; STAGE_ORDER.forEach(function(k){ baseline[k] = computeStatBaseline(rows, k, statFn); });
+    var rateBaseline = {};
+    if (wide) rateKeys.forEach(function(k){ rateBaseline[k] = statFn(rows.map(function(r){ return r.ratePrev[k]; })); });
+    rows.forEach(function(row){
+      row.deltaNeutral = false; // "BU Average" always populates, even when the two dates coincide
+      var mom = {};
+      STAGE_ORDER.forEach(function(k){ mom[k] = baseline[k] ? (row.current[k]-baseline[k])/baseline[k] : 0; });
+      row.mom = mom;
+      if (wide){
+        var ratePP = {};
+        rateKeys.forEach(function(k){ ratePP[k] = row.rateNow[k]-rateBaseline[k]; });
+        row.ratePP = ratePP;
+      }
+    });
+  }
+
+  function buildBURowDates(bu, leadType, projChoice, tf, wide){
+    var pf = projectFactor(bu, projChoice);
+    var current = applyProjectRateVariance(bu, projChoice, computeBURangeCounts(bu, leadType, tf.currentStart, tf.currentEnd, pf));
+    var previous = applyProjectRateVariance(bu, projChoice, computeBURangeCounts(bu, leadType, tf.comparisonStart, tf.comparisonEnd, pf));
+    var row = { id: bu.id, current: current, previous: previous, sameDate: tf.currentEnd === tf.comparisonEnd };
+    function rates(c){ return {
+      qualRate: c.leads ? c.qualified/c.leads : 0,
+      convGalleryRate: c.qualified ? c.gallery/c.qualified : 0,
+      convBookedRate: c.qualified ? c.booked/c.qualified : 0,
+      convSoldRate: c.qualified ? c.sold/c.qualified : 0
+    }; }
+    row.rateNow = rates(current); row.ratePrev = rates(previous);
+    return row;
+  }
+  function buildShareRowDates(id, adminBU, ad, tf, leadType, projChoice){
+    var pf = projectFactor(adminBU, projChoice);
+    var cur0 = applyProjectRateVariance(adminBU, projChoice, computeBURangeCounts(adminBU, leadType, tf.currentStart, tf.currentEnd, pf));
+    var prev0 = applyProjectRateVariance(adminBU, projChoice, computeBURangeCounts(adminBU, leadType, tf.comparisonStart, tf.comparisonEnd, pf));
+    // day-blended, so the multiplier itself genuinely differs between the evaluated and
+    // referenced windows — a single static multiplier would cancel out of any delta% entirely.
+    function adVariance(c, startStr, endStr){
+      var lM = computeScalarRangeAverage(ad.leadsMultTrend, startStr, endStr);
+      var qM = computeScalarRangeAverage(ad.qualMultTrend, startStr, endStr);
+      var gM = computeScalarRangeAverage(ad.galleryMultTrend, startStr, endStr);
+      var bM = computeScalarRangeAverage(ad.bookedMultTrend, startStr, endStr);
+      var sM = computeScalarRangeAverage(ad.soldMultTrend, startStr, endStr);
+      return { leads:c.leads*ad.share*lM, qualified:c.qualified*ad.share*qM, gallery:c.gallery*ad.share*gM, booked:c.booked*ad.share*bM, sold:c.sold*ad.share*sM };
+    }
+    return {
+      id:id,
+      current: adVariance(cur0, tf.currentStart, tf.currentEnd),
+      previous: adVariance(prev0, tf.comparisonStart, tf.comparisonEnd),
+      sameDate: tf.currentEnd === tf.comparisonEnd
+    };
+  }
+
+  // ================= Section 06 (time metrics) shared renderer =================
+  function renderTimeTable(rows, tbodyId, highlightIds, profile){
+    profile = profile || 'full'; // 'full' | 'leadership' | 'buadmin'
+    var keys = ['qualTimeHrs','contactTimeHrs','agingDays'];
+    var stats = {};
+    keys.forEach(function(k){
+      var vals = rows.map(function(r){ return r.now[k]; });
+      stats[k] = { min: Math.min.apply(null, vals), max: Math.max.apply(null, vals) || 1 };
+    });
+    rows.forEach(function(r){
+      r.contactedCount = r.qualified * r.contactedRate;
+      r.uncontactedCount = r.qualified - r.contactedCount;
+    });
+    var qualVals = rows.map(function(r){ return r.qualified; });
+    var qualStat = { min: Math.min.apply(null, qualVals), max: Math.max.apply(null, qualVals) || 1 };
+    var contVals = rows.map(function(r){ return r.contactedCount; });
+    var contStat = { min: Math.min.apply(null, contVals), max: Math.max.apply(null, contVals) || 1 };
+    var uncontVals = rows.map(function(r){ return r.uncontactedCount; });
+    var uncontStat = { min: Math.min.apply(null, uncontVals), max: Math.max.apply(null, uncontVals) || 1 };
+    var contPctVals = rows.map(function(r){ return r.contactedRate; });
+    var contPctStat = { min: Math.min.apply(null, contPctVals), max: Math.max.apply(null, contPctVals) || 1 };
+    var uncontPctVals = rows.map(function(r){ return 1-r.contactedRate; });
+    var uncontPctStat = { min: Math.min.apply(null, uncontPctVals), max: Math.max.apply(null, uncontPctVals) || 1 };
+
+    var fStats = null;
+    if (profile === 'buadmin' || profile === 'full'){
+      function statOf(vals){ return { min: Math.min.apply(null, vals), max: Math.max.apply(null, vals) || 1 }; }
+      fStats = {
+        gallery: statOf(rows.map(function(r){ return r.gallery; })),
+        booked: statOf(rows.map(function(r){ return r.booked; })),
+        sold: statOf(rows.map(function(r){ return r.sold; })),
+        galleryPct: statOf(rows.map(function(r){ return r.qualified ? r.gallery/r.qualified : 0; })),
+        bookedPct: statOf(rows.map(function(r){ return r.qualified ? r.booked/r.qualified : 0; })),
+        soldPct: statOf(rows.map(function(r){ return r.qualified ? r.sold/r.qualified : 0; })),
+        gdvBooked: statOf(rows.map(function(r){ return r.gdvBooked; })),
+        gdvSold: statOf(rows.map(function(r){ return r.gdvSold; }))
+      };
+    }
+
+    function metricCell(row, k, extraClass){
+      var bg = colorScaleInverse(row.now[k], stats[k].min, stats[k].max);
+      return '<td class="'+extraClass+'" style="background:'+bg+';">'+Math.round(row.now[k])+' '+OPS_METRICS[k].unit+'</td>';
+    }
+    function momCellInverseGrp(delta, extraClass, neutral){
+      var cell = momCellInverse(delta, neutral);
+      return cell.replace('<td class="mom-cell"', '<td class="mom-cell '+extraClass+'"');
+    }
+    function scaledCell(v, stat, cls, text, inverse){
+      var bg = inverse ? colorScaleInverse(v, stat.min, stat.max) : colorScale(v, stat.min, stat.max);
+      return '<td class="'+cls+'" style="background:'+bg+';">'+text+'</td>';
+    }
+
+    var tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = rows.map(function(row, idx){
+      var neutral = !!row.sameDate;
+      // Origa group: always "No. of Leads Qualified"; the "full" profile also keeps
+      // Avg. Qualification Time + its Δ% ahead of it (leadership/buadmin exclude those).
+      var origaCells = '<td class="grp-origa-cell" style="background:'+colorScale(row.qualified, qualStat.min, qualStat.max)+';">'+fmt(row.qualified)+'</td>';
+      if (profile === 'full'){
+        origaCells = metricCell(row,'qualTimeHrs','grp-origa-cell') + momCellInverseGrp(row.mom.qualTimeHrs,'grp-origa-cell',neutral) + origaCells;
+      }
+
+      // Sales Staff group leads with the Contacted/Uncontacted breakdown (first columns),
+      // then the time metrics + their Δ%s. "leadership" excludes Aging Time; "buadmin" adds
+      // the funnel columns (Gallery/Booked/Sold + % of qualified + GDV) at the very end.
+      var contactedCells =
+        scaledCell(row.contactedCount, contStat, 'grp-staff-cell grp-divider', fmt(row.contactedCount), false) +
+        scaledCell(row.contactedRate, contPctStat, 'grp-staff-cell', pct(row.contactedRate), false) +
+        momCellInverseGrp(row.contactedMom, 'grp-staff-cell', neutral).replace('mom-cell','mom-cell') +
+        scaledCell(row.uncontactedCount, uncontStat, 'grp-staff-cell grp-subdivider', fmt(row.uncontactedCount), true) +
+        scaledCell(1-row.contactedRate, uncontPctStat, 'grp-staff-cell', pct(1-row.contactedRate), true) +
+        momCell(row.uncontactedMom, neutral).replace('<td class="mom-cell"', '<td class="mom-cell grp-staff-cell"');
+
+      var timeCells = metricCell(row,'contactTimeHrs','grp-staff-cell grp-subdivider') + momCellInverseGrp(row.mom.contactTimeHrs,'grp-staff-cell',neutral) +
+        (profile !== 'leadership' ? metricCell(row,'agingDays','grp-staff-cell grp-subdivider') + momCellInverseGrp(row.mom.agingDays,'grp-staff-cell',neutral) : '');
+
+      var funnelCells = '';
+      if (profile === 'buadmin' || profile === 'full'){
+        funnelCells =
+          scaledCell(row.gallery, fStats.gallery, 'grp-staff-cell grp-subdivider', fmt(row.gallery), false) +
+          scaledCell(row.qualified?row.gallery/row.qualified:0, fStats.galleryPct, 'grp-staff-cell', pct(row.qualified?row.gallery/row.qualified:0), false) +
+          scaledCell(row.booked, fStats.booked, 'grp-staff-cell grp-subdivider', fmt(row.booked), false) +
+          scaledCell(row.qualified?row.booked/row.qualified:0, fStats.bookedPct, 'grp-staff-cell', pct(row.qualified?row.booked/row.qualified:0), false) +
+          scaledCell(row.gdvBooked, fStats.gdvBooked, 'grp-staff-cell', fmtRM(row.gdvBooked), false) +
+          scaledCell(row.sold, fStats.sold, 'grp-staff-cell grp-subdivider', fmt(row.sold), false) +
+          scaledCell(row.qualified?row.sold/row.qualified:0, fStats.soldPct, 'grp-staff-cell', pct(row.qualified?row.sold/row.qualified:0), false) +
+          scaledCell(row.gdvSold, fStats.gdvSold, 'grp-staff-cell', fmtRM(row.gdvSold), false);
+      }
+
+      var cells = origaCells + contactedCells + timeCells + funnelCells;
+      var hl = (highlightIds && highlightIds.indexOf(row.id) !== -1) ? ' class="highlight"' : '';
+      return '<tr'+hl+'><td class="idx">'+(idx+1)+'</td><td class="name left">'+row.id+'</td>'+cells+'</tr>';
+    }).join('');
+  }
+  function median(arr){
+    var s = arr.slice().sort(function(a,b){ return a-b; }); var n = s.length;
+    if (!n) return 0;
+    return n % 2 ? s[(n-1)/2] : (s[n/2-1]+s[n/2])/2;
+  }
+  function mean(arr){ return arr.length ? arr.reduce(function(a,b){ return a+b; },0)/arr.length : 0; }
+  function maxOf(arr){ return arr.length ? Math.max.apply(null, arr) : 0; }
+  var DELTA_STAT_FN = { median: median, average: mean, top: maxOf };
+  var DELTA_MODE_LABEL = { prior:'Prior Period (Actual)', median:'Portfolio Median', average:'Portfolio Average', top:'Top Performer (Max)' };
+
+  function timePairForGranularity(opsMonthly, granularity){
+    var n = opsMonthly.length;
+    if (granularity === 'wow' || granularity === 'mom'){
+      return { now: opsMonthly[n-1], prev: opsMonthly[n-2] };
+    }
+    if (granularity === 'qoq'){
+      function avg3(idxs){ var r={}; ['qualTimeHrs','contactTimeHrs','agingDays'].forEach(function(k){ r[k]=idxs.reduce(function(a,m){return a+opsMonthly[m][k];},0)/idxs.length; }); return r; }
+      return { now: avg3([n-2,n-1]), prev: avg3([n-5,n-4,n-3]) };
+    }
+    // yoy: synthesize prior year as +/-15% noise off current
+    var now = opsMonthly[n-1];
+    var prev = { qualTimeHrs: now.qualTimeHrs*rand(0.85,1.15), contactTimeHrs: now.contactTimeHrs*rand(0.85,1.15), agingDays: now.agingDays*rand(0.85,1.15) };
+    return { now:now, prev:prev };
+  }
+
+  // ================= Section 05: ops chart (fixed, trailing 12 months) =================
+  function computeOpsSeries(buList){
+    return MONTHS_TREND.map(function(_, m){
+      var q=0,c=0,a=0;
+      buList.forEach(function(bu){ var mo=bu.opsMonthly[m]; q+=mo.qualTimeHrs; c+=mo.contactTimeHrs; a+=mo.agingDays; });
+      var nBU = buList.length || 1;
+      return { qualTimeHrs:q/nBU, contactTimeHrs:c/nBU, agingDays:a/nBU };
+    });
+  }
+  function averageOpsMonthly(list){
+    return MONTHS_TREND.map(function(_, m){
+      var q=0,c=0,a=0;
+      list.forEach(function(s){ var mo=s.opsMonthly[m]; q+=mo.qualTimeHrs; c+=mo.contactTimeHrs; a+=mo.agingDays; });
+      var n = list.length || 1;
+      return { qualTimeHrs:q/n, contactTimeHrs:c/n, agingDays:a/n };
+    });
+  }
+  // benchmark series (median/average/top) across ALL 15 BUs, regardless of BU/staff filter
+  function computeBenchmarkSeries(statFn){
+    return MONTHS_TREND.map(function(_, m){
+      var r = {};
+      ['qualTimeHrs','contactTimeHrs','agingDays'].forEach(function(k){
+        r[k] = statFn(BUS.map(function(bu){ return bu.opsMonthly[m][k]; }));
+      });
+      return r;
+    });
+  }
+  function computeOwnAverageSeries(series){
+    var avg = {};
+    ['qualTimeHrs','contactTimeHrs','agingDays'].forEach(function(k){ avg[k] = mean(series.map(function(r){ return r[k]; })); });
+    return MONTHS_TREND.map(function(){ return avg; });
+  }
+  var INDIVIDUAL_LINE_COLORS = ['#e0566b','#6fbf8b','#7fa8d9','#a58fd9','#5fb8b8','#d98198','#f0c674','#8fd3e0'];
+  function drawOpsChart(series, metricKey, benchmarkSeries, compareMode, individualSeries){
+    var metric = OPS_METRICS[metricKey];
+    var svg = document.getElementById('opschart');
+    var W=980,H=280,padL=56,padR=24,padT=18,padB=34;
+    var plotW=W-padL-padR, plotH=H-padT-padB, n=MONTHS_TREND.length, xStep=plotW/(n-1);
+    var axisMax = metric.axisMax;
+    if (benchmarkSeries){
+      var benchMax = Math.max.apply(null, benchmarkSeries.map(function(r){ return r[metricKey]; }));
+      axisMax = Math.max(axisMax, Math.ceil(benchMax*1.15/5)*5);
+    }
+    if (individualSeries){
+      individualSeries.forEach(function(ind){
+        var m = Math.max.apply(null, ind.series.map(function(r){ return r[metricKey]; }));
+        axisMax = Math.max(axisMax, Math.ceil(m*1.15/5)*5);
+      });
+    }
+    function x(i){ return padL+i*xStep; }
+    function y(v){ return padT + (1 - Math.min(v,axisMax)/axisMax)*plotH; }
+    var svgns='http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    [0,0.25,0.5,0.75,1].forEach(function(v){
+      var yy=padT+(1-v)*plotH;
+      var ln=document.createElementNS(svgns,'line');
+      ln.setAttribute('x1',padL); ln.setAttribute('x2',W-padR); ln.setAttribute('y1',yy); ln.setAttribute('y2',yy);
+      ln.setAttribute('stroke','#2a415d'); ln.setAttribute('stroke-width','1'); ln.setAttribute('stroke-dasharray','2,4'); svg.appendChild(ln);
+      var lbl=document.createElementNS(svgns,'text');
+      lbl.setAttribute('x',padL-8); lbl.setAttribute('y',yy+3); lbl.setAttribute('text-anchor','end'); lbl.setAttribute('class','trend-tip');
+      lbl.textContent = Math.round(axisMax*v)+' '+metric.unit; svg.appendChild(lbl);
+    });
+    MONTHS_TREND.forEach(function(m,i){
+      var lbl=document.createElementNS(svgns,'text');
+      lbl.setAttribute('x',x(i)); lbl.setAttribute('y',H-8); lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','trend-tip');
+      lbl.setAttribute('font-size','8.5');
+      lbl.textContent=m; svg.appendChild(lbl);
+    });
+    // individual BU lines (drawn under the aggregate/benchmark so the aggregate stays on top)
+    if (individualSeries){
+      individualSeries.forEach(function(ind, idx){
+        var color = INDIVIDUAL_LINE_COLORS[idx % INDIVIDUAL_LINE_COLORS.length];
+        var ipts = ind.series.map(function(row,i){ return x(i)+','+y(row[metricKey]); }).join(' ');
+        var ipoly=document.createElementNS(svgns,'polyline');
+        ipoly.setAttribute('points',ipts); ipoly.setAttribute('fill','none'); ipoly.setAttribute('stroke',color); ipoly.setAttribute('stroke-width','1.75');
+        ipoly.setAttribute('stroke-linecap','round'); ipoly.setAttribute('stroke-linejoin','round'); ipoly.setAttribute('opacity','0.85'); svg.appendChild(ipoly);
+        ind.series.forEach(function(row,i){
+          var c=document.createElementNS(svgns,'circle');
+          c.setAttribute('cx',x(i)); c.setAttribute('cy',y(row[metricKey])); c.setAttribute('r','2'); c.setAttribute('fill',color); svg.appendChild(c);
+        });
+      });
+    }
+    if (benchmarkSeries){
+      var bpts = benchmarkSeries.map(function(row,i){ return x(i)+','+y(row[metricKey]); }).join(' ');
+      var bpoly=document.createElementNS(svgns,'polyline');
+      bpoly.setAttribute('points',bpts); bpoly.setAttribute('fill','none'); bpoly.setAttribute('stroke','var(--text-lo)'); bpoly.setAttribute('stroke-width','2');
+      bpoly.setAttribute('stroke-linecap','round'); bpoly.setAttribute('stroke-linejoin','round'); svg.appendChild(bpoly);
+      var isFlat = benchmarkSeries[0][metricKey] === benchmarkSeries[benchmarkSeries.length-1][metricKey];
+      benchmarkSeries.forEach(function(row,i){
+        var v=row[metricKey];
+        var c=document.createElementNS(svgns,'circle');
+        c.setAttribute('cx',x(i)); c.setAttribute('cy',y(v)); c.setAttribute('r','2.5'); c.setAttribute('fill','var(--text-lo)'); svg.appendChild(c);
+        // a flat "own average" line only needs one label; the group-wide line gets one per point
+        if (!isFlat || i === benchmarkSeries.length-1){
+          var blbl=document.createElementNS(svgns,'text');
+          blbl.setAttribute('x',x(i)); blbl.setAttribute('y',y(v)+16); blbl.setAttribute('text-anchor','middle'); blbl.setAttribute('class','trend-tip');
+          blbl.style.fill='var(--text-lo)'; blbl.textContent = Math.round(v)+' '+metric.unit; svg.appendChild(blbl);
+        }
+      });
+    }
+    var pts = series.map(function(row,i){ return x(i)+','+y(row[metricKey]); }).join(' ');
+    var poly=document.createElementNS(svgns,'polyline');
+    poly.setAttribute('points',pts); poly.setAttribute('fill','none'); poly.setAttribute('stroke',metric.color); poly.setAttribute('stroke-width','2.5');
+    poly.setAttribute('stroke-linecap','round'); poly.setAttribute('stroke-linejoin','round'); svg.appendChild(poly);
+    series.forEach(function(row,i){
+      var v=row[metricKey];
+      var c=document.createElementNS(svgns,'circle');
+      c.setAttribute('cx',x(i)); c.setAttribute('cy',y(v)); c.setAttribute('r','3.5'); c.setAttribute('fill',metric.color);
+      c.setAttribute('stroke','#101f30'); c.setAttribute('stroke-width','1.5'); svg.appendChild(c);
+      var lbl=document.createElementNS(svgns,'text');
+      lbl.setAttribute('x',x(i)); lbl.setAttribute('y',y(v)-10); lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','trend-tip');
+      lbl.style.fill=metric.color; lbl.textContent = Math.round(v)+' '+metric.unit; svg.appendChild(lbl);
+    });
+    var legend=document.getElementById('ops-legend');
+    legend.innerHTML = '<span class="item"><span class="dot" style="background:'+metric.color+';"></span>'+metric.short+' ('+metric.unit+')'+(individualSeries&&individualSeries.length?' — Aggregate':'')+'</span>' +
+      (benchmarkSeries ? '<span class="item"><span class="dot" style="background:var(--text-lo);"></span>'+
+        (compareMode==='ownavg' ? 'Own BU Average' : (currentView==='buadmin' ? 'Group Wide BU Average' : 'BU Average'))+'</span>' : '') +
+      (individualSeries ? individualSeries.map(function(ind, idx){
+        var color = INDIVIDUAL_LINE_COLORS[idx % INDIVIDUAL_LINE_COLORS.length];
+        return '<span class="item"><span class="dot" style="background:'+color+';"></span>'+ind.id+'</span>';
+      }).join('') : '');
+  }
+
+  // ================= view switching =================
+  var currentView = 'innovation';
+  var VIEW_TITLES = { innovation:'Innovation Team', leadership:'Leadership', buadmin:'BU Admin' };
+  var S04_TITLES = { innovation:'Leads by Business Unit', leadership:'Leads by Business Unit', buadmin:'Leads by Ad Campaign' };
+  var S06_TITLES = { innovation:'Speed-to-Lead & Aging Metrics by BU', leadership:'Speed-to-Lead & Aging Metrics by BU', buadmin:'Speed-to-Lead & Aging Metrics by Sales Staff' };
+  function setView(view){
+    currentView = view;
+    document.getElementById('view-title').textContent = VIEW_TITLES[view];
+    document.getElementById('s04-title').textContent = S04_TITLES[view];
+    document.getElementById('s06-title').textContent = S06_TITLES[view];
+    document.querySelectorAll('[data-view]').forEach(function(el){
+      var views = el.getAttribute('data-view').split(' ');
+      el.style.display = views.indexOf(view) !== -1 ? '' : 'none';
+    });
+    document.querySelectorAll('#view-switch button').forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-view-target') === view);
+    });
+    renderAllFilterRows();
+    renderTimeframeControl('s01', 'tf-01');
+    renderTimeframeControl('s04', 'tf-04');
+    renderTimeframeControl('s06', 'tf-06');
+    render();
+  }
+  document.querySelectorAll('#view-switch button').forEach(function(btn){
+    btn.addEventListener('click', function(){ setView(btn.getAttribute('data-view-target')); });
+  });
+
+  // ================= main render =================
+  var boardMode = 'top', boardModeLeadsMoM = 'top';
+  function render(){
+    var leadType = getFilterValue('leadtype', 'live');
+    var projChoice = MULTISELECT_STATE.project;
+    var granularity = getFilterValue('comparison', 'mom');
+    var staffSelection = currentView === 'buadmin' ? MULTISELECT_STATE.staff : STAFF.map(function(s){ return s.id; });
+    var staffAllSelected = staffSelection.length >= STAFF.length;
+
+    // ---- Section 01 + Matrix: uses its own Timeframe control (Standard/Flexible), plus BU/Project/Lead Type/Staff ----
+    var tf01 = resolveTimeframe(TIMEFRAME.s01);
+    var startDate = tf01.currentStart;
+    var endDate = tf01.currentEnd;
+    var prevStart = tf01.comparisonStart, prevEnd = tf01.comparisonEnd;
+
+    var buList = currentView === 'buadmin'
+      ? BUS.filter(function(b){ return b.id === ADMIN_BU_ID; })
+      : BUS.filter(function(b){ return MULTISELECT_STATE.bu.indexOf(b.id) !== -1; });
+    var staffList = STAFF.filter(function(s){ return staffSelection.indexOf(s.id) !== -1; });
+    var staffShare = 1;
+    if (currentView === 'buadmin' && !staffAllSelected){
+      staffShare = staffList.reduce(function(sum, s){ return sum + s.share; }, 0);
+    }
+
+    var totals = { leads:0,qualified:0,gallery:0,booked:0,sold:0 };
+    var prevTotals = { leads:0,qualified:0,gallery:0,booked:0,sold:0 };
+    var gdvBooked=0, gdvSold=0;
+    var staffVarianceList = (currentView === 'buadmin' && !staffAllSelected) ? staffList : null;
+    buList.forEach(function(bu){
+      var pf = projectFactor(bu, projChoice) * staffShare;
+      var cur = applyStaffRateVariance(staffVarianceList, applyProjectRateVariance(bu, projChoice, computeBURangeCounts(bu, leadType, startDate, endDate, pf)));
+      var prev = applyStaffRateVariance(staffVarianceList, applyProjectRateVariance(bu, projChoice, computeBURangeCounts(bu, leadType, prevStart, prevEnd, pf)));
+      STAGE_ORDER.forEach(function(k){ totals[k]+=cur[k]; prevTotals[k]+=prev[k]; });
+      gdvBooked += cur.booked*bu.avgPrice; gdvSold += cur.sold*bu.avgPrice;
+    });
+    drawFunnel(totals, prevTotals, gdvBooked, gdvSold, tf01.currentEnd === tf01.comparisonEnd);
+    drawConversionMatrix(totals);
+
+    // ---- Section 02 + 03: fixed trailing 12 months (respects BU, Project, Lead Type, Staff share) ----
+    var monthlySeries = computeMonthlySeries(buList, leadType, projChoice);
+    if (staffShare !== 1){
+      monthlySeries = monthlySeries.map(function(row){
+        var scaled = scaleCounts(row, staffShare);
+        return staffVarianceList ? applyStaffRateVariance(staffVarianceList, scaled) : scaled;
+      });
+    }
+    drawComboChart(monthlySeries, STAGE_PAIRS[0]);
+    drawQualifyToSoldChart(monthlySeries);
+
+    // ---- Section 05: Monthly Stage Conversion by BU (fixed trailing 12 months, all 15 BUs) ----
+    renderConvTable();
+
+    // ---- Section 04: uses its own Timeframe control + Compare Against, not Section 01's filters ----
+    var tf04 = resolveTimeframe(TIMEFRAME.s04);
+    if (currentView === 'innovation'){
+      var rowsFull = BUS.map(function(bu){ return buildBURowDates(bu, leadType, projChoice, tf04, true); });
+      applyDeltaMode(rowsFull, deltaMode04, true);
+      renderCountsTable(rowsFull, 'bu-table-body', true);
+    } else if (currentView === 'leadership'){
+      var rowsLtd = BUS.map(function(bu){ return buildBURowDates(bu, leadType, projChoice, tf04, false); });
+      applyDeltaMode(rowsLtd, deltaMode04, false);
+      renderCountsTable(rowsLtd, 'bu-table-body-ltd', false, true);
+    } else {
+      var adminBU = BUS.filter(function(b){ return b.id === ADMIN_BU_ID; })[0];
+      var adsRows = ADS.map(function(ad){ return buildShareRowDates(ad.id, adminBU, ad, tf04, leadType, projChoice); });
+      applyDeltaMode(adsRows, deltaMode04, false);
+      renderCountsTable(adsRows, 'ads-table-body', false);
+    }
+
+    // ---- Section 05: fixed trailing 12 months, respects BU / Staff scope + Compare Against ----
+    if (currentView === 'innovation' || currentView === 'buadmin'){
+      var opsMetric = getFilterValue('opsmetric', 'qualTimeHrs');
+      var opsDelta = getFilterValue('opsdelta', currentView === 'buadmin' ? 'ownavg' : 'none');
+      var opsSeries, opsBenchmark = null;
+      if (currentView === 'buadmin'){
+        // primary line is always "average across the selected staff" (all 10, or a subset) —
+        // this way "Own BU Average" (average across ALL 10) naturally coincides with the
+        // primary line whenever "All Staff" is selected, instead of being two unrelated sources.
+        opsSeries = averageOpsMonthly(staffList.length ? staffList : STAFF);
+        if (opsDelta === 'ownavg') opsBenchmark = averageOpsMonthly(STAFF);
+        else if (opsDelta === 'average') opsBenchmark = computeBenchmarkSeries(DELTA_STAT_FN.average);
+      } else {
+        opsSeries = computeOpsSeries(buList);
+        if (opsDelta === 'average') opsBenchmark = computeBenchmarkSeries(DELTA_STAT_FN.average);
+      }
+      // when a genuine subset of BUs is selected (not "All BUs"), also draw each BU's own
+      // line alongside the aggregate, so 3 selected BUs → 1 aggregate + 3 individual lines.
+      var opsIndividual = null;
+      if (currentView === 'innovation' && buList.length > 1 && buList.length < BUS.length && buList.length <= 8){
+        opsIndividual = buList.map(function(bu){ return { id: bu.id, series: computeOpsSeries([bu]) }; });
+      }
+      drawOpsChart(opsSeries, opsMetric, opsBenchmark, opsDelta, opsIndividual);
+    }
+
+    // ---- Section 06: uses its own Timeframe control (tf-06), not the Comparison Period dropdown ----
+    var tf06 = resolveTimeframe(TIMEFRAME.s06);
+    var sameDate06 = tf06.currentEnd === tf06.comparisonEnd;
+    var deltaMode06Val = getFilterValue('delta06', 'prior');
+    if (currentView === 'innovation' || currentView === 'leadership'){
+      // pre-compute every BU's now/prev first, so "BU Average" can use the group's referenced-period
+      // values as its baseline (consistent with Section 04's fix — average must depend on the date).
+      var buOpsData = BUS.map(function(bu){
+        var now = computeOpsRangeAverage(bu.opsMonthlyReal, tf06.currentStart, tf06.currentEnd);
+        var prev = computeOpsRangeAverage(bu.opsMonthlyReal, tf06.comparisonStart, tf06.comparisonEnd);
+        var contactedNow = computeScalarRangeAverage(bu.contactedRateTrend, tf06.currentStart, tf06.currentEnd);
+        var contactedPrev = computeScalarRangeAverage(bu.contactedRateTrend, tf06.comparisonStart, tf06.comparisonEnd);
+        return { bu: bu, now: now, prev: prev, contactedNow: contactedNow, contactedPrev: contactedPrev };
+      });
+      var groupAvgBaseline = null, groupAvgContactedBaseline = null;
+      if (deltaMode06Val === 'average'){
+        groupAvgBaseline = {};
+        ['qualTimeHrs','contactTimeHrs','agingDays'].forEach(function(k){
+          groupAvgBaseline[k] = mean(buOpsData.map(function(d){ return d.prev[k]; }));
+        });
+        groupAvgContactedBaseline = mean(buOpsData.map(function(d){ return d.contactedPrev; }));
+      }
+      var deltaNeutral06 = deltaMode06Val === 'prior' && sameDate06;
+      var rowsOut = buOpsData.map(function(d){
+        var bu = d.bu;
+        var baseline = deltaMode06Val === 'average' ? groupAvgBaseline : d.prev;
+        var mom = {};
+        ['qualTimeHrs','contactTimeHrs','agingDays'].forEach(function(k){ mom[k] = deltaNeutral06 ? 0 : (baseline[k] ? (d.now[k]-baseline[k])/baseline[k] : 0); });
+        var funnelNow = computeBUMonth(bu, leadType, 7, 1);
+        var contactedBaseline = deltaMode06Val === 'average' ? groupAvgContactedBaseline : d.contactedPrev;
+        var contactedMom = deltaNeutral06 ? 0 : (contactedBaseline ? (d.contactedNow-contactedBaseline)/contactedBaseline : 0);
+        var uncontactedBaseline = 1-contactedBaseline;
+        var uncontactedMom = deltaNeutral06 ? 0 : (uncontactedBaseline ? ((1-d.contactedNow)-uncontactedBaseline)/uncontactedBaseline : 0);
+        return {
+          id: bu.id, now: d.now, mom: mom, qualified: funnelNow.qualified, contactedRate: d.contactedNow, contactedMom: contactedMom, uncontactedMom: uncontactedMom, sameDate: deltaNeutral06,
+          gallery: funnelNow.gallery, booked: funnelNow.booked, sold: funnelNow.sold,
+          gdvBooked: funnelNow.booked*bu.avgPrice, gdvSold: funnelNow.sold*bu.avgPrice
+        };
+      });
+      if (currentView === 'innovation'){
+        renderTimeTable(rowsOut, 'ops-table-body', null, 'full');
+      } else {
+        renderTimeTable(rowsOut, 'leadership-table-body', null, 'leadership');
+      }
+    }
+    if (currentView === 'buadmin'){
+      var adminBUForStaff = BUS.filter(function(b){ return b.id === ADMIN_BU_ID; })[0];
+      var adminFunnelNow = computeBUMonth(adminBUForStaff, leadType, 7, 1);
+      var staffDeltaMode = getFilterValue('staffdelta06', 'prior');
+      var staffDeltaNeutral = staffDeltaMode === 'prior' && sameDate06;
+
+      // "BU Average" / "Group Wide BU Average" both use the REFERENCED period as their baseline —
+      // otherwise moving the Referenced End Date would have no effect on the result. Both also
+      // stay populated even when Referenced = Evaluated, since they're not a period-over-period
+      // comparison; only "Staff Historical" treats matching dates as "no change".
+      var ownAvgBaseline = {}, ownAvgContactedBaseline;
+      var groupBaseline = {}, groupContactedBaseline;
+      ['qualTimeHrs','contactTimeHrs','agingDays'].forEach(function(k){
+        ownAvgBaseline[k] = mean(STAFF.map(function(st){ return computeOpsRangeAverage(st.opsMonthlyReal, tf06.comparisonStart, tf06.comparisonEnd)[k]; }));
+        groupBaseline[k] = mean(BUS.map(function(bu){ return computeOpsRangeAverage(bu.opsMonthlyReal, tf06.comparisonStart, tf06.comparisonEnd)[k]; }));
+      });
+      ownAvgContactedBaseline = mean(STAFF.map(function(st){ return computeScalarRangeAverage(st.contactedRateTrend, tf06.comparisonStart, tf06.comparisonEnd); }));
+      groupContactedBaseline = mean(BUS.map(function(bu){ return computeScalarRangeAverage(bu.contactedRateTrend, tf06.comparisonStart, tf06.comparisonEnd); }));
+
+      var staffRows = STAFF.map(function(s){
+        var now = computeOpsRangeAverage(s.opsMonthlyReal, tf06.currentStart, tf06.currentEnd);
+        var contactedNow = computeScalarRangeAverage(s.contactedRateTrend, tf06.currentStart, tf06.currentEnd);
+        var baseline, contactedBaseline;
+        if (staffDeltaMode === 'ownavg'){ baseline = ownAvgBaseline; contactedBaseline = ownAvgContactedBaseline; }
+        else if (staffDeltaMode === 'average'){ baseline = groupBaseline; contactedBaseline = groupContactedBaseline; }
+        else { // 'prior' — Staff Historical: that staff's own referenced-period value
+          baseline = computeOpsRangeAverage(s.opsMonthlyReal, tf06.comparisonStart, tf06.comparisonEnd);
+          contactedBaseline = computeScalarRangeAverage(s.contactedRateTrend, tf06.comparisonStart, tf06.comparisonEnd);
+        }
+        var mom = {};
+        ['qualTimeHrs','contactTimeHrs','agingDays'].forEach(function(k){ mom[k] = staffDeltaNeutral ? 0 : (baseline[k] ? (now[k]-baseline[k])/baseline[k] : 0); });
+        var contactedMom = staffDeltaNeutral ? 0 : (contactedBaseline ? (contactedNow-contactedBaseline)/contactedBaseline : 0);
+        var uncontactedBaseline = 1-contactedBaseline;
+        var uncontactedMom = staffDeltaNeutral ? 0 : (uncontactedBaseline ? ((1-contactedNow)-uncontactedBaseline)/uncontactedBaseline : 0);
+        // multiply by each staff's own conversion-variance factor, not just their volume
+        // share — otherwise share cancels out of gallery/booked/sold ÷ qualified and every
+        // staff member shows an identical percentage.
+        var gallery = adminFunnelNow.gallery * s.share * s.galleryMult;
+        var booked = adminFunnelNow.booked * s.share * s.bookedMult;
+        var sold = adminFunnelNow.sold * s.share * s.soldMult;
+        return {
+          id: s.id, now: now, mom: mom, qualified: adminFunnelNow.qualified*s.share*s.qualMult, contactedRate: contactedNow, contactedMom: contactedMom, uncontactedMom: uncontactedMom,
+          gallery: gallery, booked: booked, sold: sold,
+          gdvBooked: booked * adminBUForStaff.avgPrice, gdvSold: sold * adminBUForStaff.avgPrice,
+          sameDate: staffDeltaNeutral
+        };
+      });
+      renderTimeTable(staffRows, 'staff-table-body', staffAllSelected ? null : staffSelection, 'buadmin');
+    }
+
+    // ---- Leaderboards (Innovation + Leadership only) ----
+    if (currentView === 'innovation' || currentView === 'leadership'){
+      var perBU = BUS.map(function(bu){
+        var pf = projectFactor(bu, projChoice);
+        var c = applyProjectRateVariance(bu, projChoice, computeBURangeCounts(bu, leadType, startDate, endDate, pf));
+        return { id: bu.id, avgPrice: bu.avgPrice, leads:c.leads, qualified:c.qualified, sold:c.sold, qualRate: c.leads? c.qualified/c.leads:0 };
+      });
+      var label = boardMode === 'top' ? 'Top 5' : 'Bottom 5';
+      var boardCls = boardMode === 'top' ? 'up' : 'down';
+      document.getElementById('board-qual-title').textContent = label+' BUs — by Qualification Rate';
+      document.getElementById('board-sales-title').textContent = label+' BUs — by Sales';
+      var sortedQual = perBU.slice().sort(function(a,b){ return boardMode==='top' ? b.qualRate-a.qualRate : a.qualRate-b.qualRate; }).slice(0,5);
+      document.getElementById('board-qual').innerHTML = sortedQual.map(function(d,idx){
+        return '<tr><td class="rank">'+String(idx+1).padStart(2,'0')+'</td><td class="name">'+d.id+'</td><td class="metric">'+fmt(d.qualified)+'</td><td class="metric"><b class="arrow '+boardCls+'">'+pct(d.qualRate)+'</b></td></tr>';
+      }).join('');
+      var sortedSales = perBU.map(function(d){ return Object.assign({}, d, { salesRM: d.sold*d.avgPrice }); })
+        .sort(function(a,b){ return boardMode==='top' ? b.salesRM-a.salesRM : a.salesRM-b.salesRM; }).slice(0,5);
+      document.getElementById('board-sales').innerHTML = sortedSales.map(function(d,idx){
+        return '<tr><td class="rank">'+String(idx+1).padStart(2,'0')+'</td><td class="name">'+d.id+'</td><td class="metric">'+fmt(d.sold)+'</td><td class="metric"><b class="arrow '+boardCls+'">'+fmtRM(d.salesRM)+'</b></td></tr>';
+      }).join('');
+    }
+    if (currentView === 'leadership'){
+      var lmRows = BUS.map(function(bu){
+        var pf = projectFactor(bu, projChoice);
+        var pair = computeComparisonPair(bu, leadType, pf, granularity);
+        var d = pair.previous.leads ? (pair.current.leads-pair.previous.leads)/pair.previous.leads : 0;
+        return { id: bu.id, leads: pair.current.leads, delta:d };
+      });
+      var labelLM = boardModeLeadsMoM==='top' ? 'Top 5' : 'Bottom 5';
+      var boardClsLM = boardModeLeadsMoM==='top' ? 'up' : 'down';
+      document.getElementById('board-leadsmom-title').textContent = labelLM+' BUs — by Leads Growth';
+      var sortedLM = lmRows.slice().sort(function(a,b){ return boardModeLeadsMoM==='top' ? b.delta-a.delta : a.delta-b.delta; }).slice(0,5);
+      document.getElementById('board-leadsmom').innerHTML = sortedLM.map(function(d,idx){
+        var arrow = d.delta>=0?'▲':'▼';
+        return '<tr><td class="rank">'+String(idx+1).padStart(2,'0')+'</td><td class="name">'+d.id+'</td><td class="metric">'+fmt(d.leads)+'</td><td class="metric"><b class="arrow '+boardClsLM+'">'+arrow+' '+(d.delta>=0?'+':'')+Math.round(d.delta*100)+'%</b></td></tr>';
+      }).join('');
+    }
+  }
+
+  document.getElementById('board-toggle').addEventListener('click', function(){
+    boardMode = boardMode==='top' ? 'bottom' : 'top';
+    this.textContent = boardMode==='top' ? 'Show Bottom 5' : 'Show Top 5';
+    render();
+  });
+  document.getElementById('board-toggle-leadsmom').addEventListener('click', function(){
+    boardModeLeadsMoM = boardModeLeadsMoM==='top' ? 'bottom' : 'top';
+    this.textContent = boardModeLeadsMoM==='top' ? 'Show Bottom 5' : 'Show Top 5';
+    render();
+  });
+
+  // one-time setup for Section 04's delta filter (view-independent)
+  var deltaMode04 = 'prior';
+  document.getElementById('filters-04-delta').innerHTML =
+    '<div class="filter"><label>Delta Metrics</label><select id="delta-04">'+
+      '<option value="prior" selected>BU Historical</option>'+
+      '<option value="average">BU Average</option>'+
+    '</select></div>';
+  document.getElementById('delta-04').addEventListener('change', function(){ deltaMode04 = this.value; render(); });
+
+  // clicking anywhere on a date/month input opens its native picker, not just the icon
+  document.addEventListener('click', function(e){
+    var el = e.target.closest('input[type="date"], input[type="month"]');
+    if (el && el.showPicker){
+      try { el.showPicker(); } catch(err){}
+    }
+  });
+
+  document.getElementById('f-conv-from').addEventListener('change', render);
+  document.getElementById('f-conv-to').addEventListener('change', render);
+
+  setView('innovation');
+</script>
+</body>
+</html>
